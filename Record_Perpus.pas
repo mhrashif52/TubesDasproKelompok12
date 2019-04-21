@@ -2,10 +2,13 @@ unit Record_Perpus;
 {Unit yang berguna untuk menyatukan seluruh record yang dibutuhkan}
 
 interface
+
+const
+	NMax = 10000;
+
 	type 
 		Akun = record
 				nama, alamat, username, password, role : string;
-				NeffAkun : integer;
 				end;
 		Tanggal = record
 				hari, bulan, tahun : string;
@@ -16,13 +19,6 @@ interface
 			month : string;
 			year : string;
 			end;
-			
-		DataHilang = record
-			username : string;
-			idBuku_Hilang : string;
-			Tanggal_Laporan : string;
-			NeffHilang : integer;
-			end;
 
 		DataPeminjaman = record
 			idBuku : string;
@@ -31,8 +27,19 @@ interface
 			datePinjam : Date;
 			batasKembali : Date;
 			status : string;
-			NeffPeminjaman : integer;
 			end;
+
+		DataKembali = record
+			username : string;
+			idBuku : string;
+			tanggalKembali : Date;
+		end;
+
+		DataHilang = record
+			username : string;
+			idBuku : string;
+			tanggalLaporan : Date;
+		end;
 
 		DataBuku = record
 			idBuku : string;
@@ -41,15 +48,30 @@ interface
 			jumlah : string;
 			tahunterbit : string;
 			kategori : string;
-			NeffBuku : integer;
 			end;
-	
-	var
-		nefDataHilang : integer;
-		usernameLogin : string;
-		usernameLogin : string; // Username 
-		userLoginStatus : string; // 'admin' atau 'pengunjung'
-		username : string;
+		
+		NeffData = record
+			Akun : integer;
+			Buku : integer;
+			Peminjaman : integer;
+			Kembali : integer;
+			Hilang : integer;
+		end;
+
+var
+	arrDataPeminjaman : array [1..NMax] of DataPeminjaman;
+	arrDataBuku : array [1..NMax] of DataBuku;
+
+	usernameLogin : string; // Username 
+	userLoginStatus : string; // 'admin' atau 'pengunjung'
+	username : string;
+	idBuku : string;
+	InputAkun : Akun;
+	NeffAkunBaru : integer;
+
 implementation
+begin
+	NeffAkunBaru := 0;
+
 end.
 				
