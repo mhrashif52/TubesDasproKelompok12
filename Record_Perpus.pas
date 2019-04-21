@@ -43,6 +43,9 @@ interface
 	var
 		nefDataHilang : integer;
 		usernameLogin : string;
+		usernameLogin : string; // Username 
+		userLoginStatus : string; // 'admin' atau 'pengunjung'
+		username : string;
 implementation
 end.
 				
