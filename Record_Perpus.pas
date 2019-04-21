@@ -5,6 +5,7 @@ interface
 	type 
 		Akun = record
 				nama, alamat, username, password, role : string;
+				NeffAkun : integer;
 				end;
 		Tanggal = record
 				hari, bulan, tahun : string;
@@ -20,6 +21,7 @@ interface
 			username : string;
 			idBuku_Hilang : string;
 			Tanggal_Laporan : string;
+			NeffHilang : integer;
 			end;
 
 		DataPeminjaman = record
@@ -29,6 +31,7 @@ interface
 			datePinjam : Date;
 			batasKembali : Date;
 			status : string;
+			NeffPeminjaman : integer;
 			end;
 
 		DataBuku = record
@@ -38,6 +41,7 @@ interface
 			jumlah : string;
 			tahunterbit : string;
 			kategori : string;
+			NeffBuku : integer;
 			end;
 	
 	var
