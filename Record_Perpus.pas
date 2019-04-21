@@ -22,6 +22,7 @@ interface
 			judul : string;
 			datePinjam : Date;
 			batasKembali : Date;
+			status : string;
 			end;
 
 		DataBuku = record
