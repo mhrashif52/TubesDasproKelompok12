@@ -15,6 +15,12 @@ interface
 			month : string;
 			year : string;
 			end;
+			
+		DataHilang = record
+			username : string;
+			idBuku_Hilang : string;
+			Tanggal_Laporan : string;
+			end;
 
 		DataPeminjaman = record
 			idBuku : string;
@@ -33,6 +39,10 @@ interface
 			tahunterbit : string;
 			kategori : string;
 			end;
+	
+	var
+		nefDataHilang : integer;
+		usernameLogin : string;
 implementation
 end.
 				
