@@ -1,10 +1,12 @@
-unit Statistik;
+unit F12;
 {Unit yang digunakan untuk menunjukkan statistik yang ada pada perpustakaan}
-{BELUM SELESAI}
+{Unit ini dipanggil di program utama saat user ber role 'Admin' memanggil command 'Statistik'
+dan akan memunculkan statistik pengguna dan buku}
 
 interface
 	uses Record_Perpus;
 	procedure Statistik(var arrDataBuku : array of DataBuku; arrDataAkun : array of akun);
+	{Procedure ini memanggil Array databuku dan Array akun dan menghitung total setiap kategori dan total semuanya}
 
 implementation
 	procedure Statistik(var arrDataBuku : array of DataBuku; arrDataAkun : array of akun);
