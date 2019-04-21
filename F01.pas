@@ -1,51 +1,61 @@
-unit F1;
+unit F01;
 
 interface
 
-type
-	user = record
-		nama : string;
-		alamat : string;
-		username : string;
-		password : string;
-	end;
-	
+uses Record_Perpus,F13temp;	
 
 var
 	// Variables to Write
-	userfile : text;
+	Akunfile : text;
 	textline : string;
 	role : string;
+	arrNewAkun : array [1..NMax] of Akun;
 	
-procedure registerAkun (var InputUser : user);
+procedure registerAkun;
 
+procedure updateRegisterAkun(InputAkun : Akun);
 
 implementation
 
-procedure registerAkun (Var InputUser : user);
+procedure registerAkun;
+
 begin
 
-setLength(textline, 1000000);
-
 write('Masukkan nama pengunjung: ');
-readln(InputUser.nama);
+readln(InputAkun.nama);
 write('Masukkan alamat pengunjung: ');
-readln(InputUser.alamat);
+readln(InputAkun.alamat);
 write('Masukkan username pengunjung: ');
-readln(InputUser.username);
+readln(InputAkun.username);
 write('Masukkan password pengunjung: ');
-readln(InputUser.password);
-role := 'pengunjung';
+readln(InputAkun.password);
+InputAkun.role := 'pengunjung';
 
-		
-textline := InputUser.nama + ',' + InputUser.alamat + ',' +
-	InputUser.username + ',' + InputUser.password + ',' + role + ',';
+NeffAkunBaru := NeffAkunBaru + 1;
+arrNewAkun[NeffAkunBaru].nama := InputAkun.nama;
+arrNewAkun[NeffAkunBaru].alamat := InputAkun.alamat;
+arrNewAkun[NeffAkunBaru].username := InputAkun.username;
+arrNewAkun[NeffAkunBaru].password := InputAkun.password;
+arrNewAkun[NeffAkunBaru].role := InputAkun.role;
 
-system.Assign(userfile, 'user.csv');
-system.Append(userfile);
-writeln(userfile,textline);
 
-Close(userfile);
+
+end;
+
+procedure updateRegisterAkun(InputAkun : Akun);
+var
+	i : integer;
+begin
+system.Assign(Akunfile, 'user.csv');
+system.Append(Akunfile);
+for i:=1 to NeffAkunBaru do
+begin
+	textline := arrNewAkun[i].nama + ',' + arrNewAkun[i].alamat + ',' +
+	arrNewAkun[i].username + ',' + arrNewAkun[i].password + ',' + arrNewAkun[i].role + ',';
+	writeln(Akunfile,textline);
+end;
+
+Close(Akunfile);
 end; // Akhir dari Procedure registerAkun
 
 end. // Akhir dari Unit Register
