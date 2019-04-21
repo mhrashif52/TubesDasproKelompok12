@@ -2,63 +2,30 @@ unit F06;
 
 interface
 
+uses Record_Perpus,F13;
+
 const
 	NMax = 10000;
 
-type
-	Date = record
-	day : string;
-	month : string;
-	year : string;
-end;
-
-	DataPeminjaman = record
-	idBuku : string;
-	username : string;
-	judul : string;
-	datePinjam : Date;
-	batasKembali : Date;
-	status : string;
-
-end;
-	DataBuku = record
-	idBuku : string;
-	judul : string;
-	author : string;
-	jumlah : string;
-	tahunterbit : string;
-	kategori : string;
-end;
-
 var
-
-	// Variable of Arrays	
-	arrDataPeminjaman : array [1..NMax] of DataPeminjaman;
-	arrDataBuku : array [1..NMax] of DataBuku;
 	
 	// Variable to Read Char or Line from csv file
 	readchar : Char;
 	readline : string;
 	
-	// Variables to Read Peminjaman.csv
-	filepeminjaman : textfile;
-	f : file of char;
-	i, j, dmyCounter : integer;
-	lenPeminjaman : longint;
-	tipeDataPeminjaman : integer;
-	newLineYearCounter : integer;
-	
-	// Variable to Read Buku.csv
-	filebuku : textfile;
-	fbuku : file of char;
-	k, l : integer;
-	lenBuku : longint;
-	tipeDataBuku : integer;
+	FileBuku : textfile;
+	jumlahSebelum : string;
+	satuanJumlahBuku : char;
+	puluhanJumlahBuku : char;
+	ratusanJumlahBuku : char;
+	ribuanJumlahBuku : char;
 
 	// Variable to Connect Between two Arrays
 	notFound : boolean;
 	m : integer;
 	bookTitleFromID : string;
+
+
 
 	// Variable to Determine whether someone is late or not
 	dateNow : string;
@@ -77,348 +44,16 @@ var
 
 procedure Pengembalian(username : string; id : string);
 	
+procedure UpdatePengembalian;	
 	
 implementation
 
 procedure Pengembalian(username : string; id : string);
 begin
-
-system.Assign(f, 'peminjaman.csv');
-system.Reset(f);
-lenPeminjaman := FileSize(f);
-Close(f);
-i := 1;
-j := 1;
-
-tipeDataPeminjaman := 1;
-newLineYearCounter := 0;
-dmyCounter := 1;
-
-system.Assign(filepeminjaman, 'peminjaman.csv');
-system.Reset(filepeminjaman);
-
-readln(filepeminjaman,readline);
-
-read(filepeminjaman, readchar);
-
-repeat 
-
-	case tipeDataPeminjaman of
-	
-	1 : begin
-	
-		if ( (readchar = ',') and (j < lenPeminjaman) ) then
-		begin
-			read(filepeminjaman, readchar);
-			j := j + 1;
-			tipeDataPeminjaman := tipeDataPeminjaman + 1;
-		end;
-		
-		while ( (readchar <> ',') and (j < lenPeminjaman) and (tipeDataPeminjaman = 1) ) do
-		begin
-		
-			arrDataPeminjaman[i].username := arrDataPeminjaman[i].username + readchar;
-			read(filepeminjaman, readchar);
-			j := j + 1;
-		end;
-	
-		end;
-		
-	2 : begin
-	
-		if ( (readchar = ',') and (j < lenPeminjaman) ) then
-		begin
-			read(filepeminjaman, readchar);
-			j := j + 1;
-			tipeDataPeminjaman := tipeDataPeminjaman + 1;
-		end;
-		
-		while ( (readchar <> ',') and (j < lenPeminjaman) and (tipeDataPeminjaman = 2) ) do
-		begin
-		
-			arrDataPeminjaman[i].idBuku := arrDataPeminjaman[i].idBuku + readchar;
-			read(filepeminjaman, readchar);
-			j := j + 1;
-		end;
-		
-		end;
-		
-	3 : begin
-		
-		if ( (readchar = '/') ) then
-		begin
-			dmyCounter := dmyCounter + 1;
-			read(filepeminjaman,readchar);
-			j := j + 1;
-		end;
-		
-		while ( (readchar <> ',') and (readchar <> '/') and (j < lenPeminjaman) and (tipeDataPeminjaman = 3) ) do
-		begin
-			
-			if (dmyCounter = 1) then
-			begin
-				arrDataPeminjaman[i].datePinjam.day := arrDataPeminjaman[i].datePinjam.day + readchar;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end else if (dmyCounter = 2) then
-			begin
-				arrDataPeminjaman[i].datePinjam.month := arrDataPeminjaman[i].datePinjam.month + readchar;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end else
-			begin
-				arrDataPeminjaman[i].datePinjam.year := arrDataPeminjaman[i].datePinjam.year + readchar;
-				newLineYearCounter := newLineYearCounter + 1;
-				if (newLineYearCounter = 4) then
-				begin
-					newLineYearCounter := 0;
-					dmyCounter := 1;
-				end;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end;
-		end;
-		
-		if ( (readchar = ',') and (j < lenPeminjaman) ) then
-		begin
-			read(filepeminjaman, readchar);
-			j := j + 1;
-			tipeDataPeminjaman := tipeDataPeminjaman + 1;
-		end;
-		
-		end;
-		
-	4 : begin
-		
-		if ( (readchar = '/') ) then
-		begin
-			dmyCounter := dmyCounter + 1;
-			read(filepeminjaman,readchar);
-			j := j + 1;
-		end;
-		
-		while ( (readchar <> ',') and (readchar <> '/') and (j < lenPeminjaman) and (tipeDataPeminjaman = 4) ) do
-		begin
-			
-			if (dmyCounter = 1) then
-			begin
-				arrDataPeminjaman[i].batasKembali.day := arrDataPeminjaman[i].batasKembali.day + readchar;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end else if (dmyCounter = 2) then
-			begin
-				arrDataPeminjaman[i].batasKembali.month := arrDataPeminjaman[i].batasKembali.month + readchar;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end else
-			begin
-				arrDataPeminjaman[i].batasKembali.year := arrDataPeminjaman[i].batasKembali.year + readchar;
-				newLineYearCounter := newLineYearCounter + 1;
-				if (newLineYearCounter = 4) then
-				begin
-					newLineYearCounter := 0;
-					dmyCounter := 1;
-				end;
-				read(filepeminjaman, readchar);
-				j := j + 1;
-			end;
-		end;
-		
-		if ( (readchar = ',') and (j < lenPeminjaman) ) then
-		begin
-			read(filepeminjaman, readchar);
-			j := j + 1;
-			tipeDataPeminjaman := tipeDataPeminjaman + 1;
-		end;
-		
-
-		end;
-	
-	5 : begin
-	
-		if ( (readchar = ',') and (j < lenPeminjaman) ) then
-		begin
-			readln(filepeminjaman, readchar);
-			read(filepeminjaman, readchar);
-			j := j + 1;
-			i := i + 1;
-			tipeDataPeminjaman := 1;
-		end;
-		
-		while ( (readchar <> ',') and (j < lenPeminjaman) and (tipeDataPeminjaman = 5) ) do
-		begin
-		
-			arrDataPeminjaman[i].status := arrDataPeminjaman[i].status + readchar;
-			read(filepeminjaman, readchar);
-			j := j + 1;
-		end;
-		
-		end;
-		
-	
-	end; // End of Case tipeDataPeminjaman
-until (j >= lenPeminjaman);
-		
-Close(filepeminjaman);
-
-
-// Algorithm to Read Buku.csv
-
-system.Assign(fbuku, 'buku.csv');
-system.Reset(fbuku);
-lenBuku := FileSize(fbuku);
-Close(fbuku);
-k := 1; // Untuk Index array arrDataBuku
-l := 1; // Untuk menandai pembacaan char keberapa pada file buku
-tipeDataBuku := 1;
-
-
-system.Assign(filebuku, 'buku.csv');
-system.Reset(filebuku);
-
-readln(filebuku,readline);
-
-read(filebuku,readchar);
-
-repeat 
-
-	case tipeDataBuku of
-	
-	1 : 
-		begin
-		if ( (readchar = ',') and (l < lenBuku) ) then
-		begin
-			read(filebuku, readchar);
-			l := l + 1;
-			tipeDataBuku := tipeDataBuku + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 1) ) do
-		begin
-		
-			arrDataBuku[k].idBuku := arrDataBuku[k].idBuku + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		end;
-		
-	2 : 
-		begin
-		if ( (readchar = ',') and (l < lenBuku) ) then
-		begin
-			read(filebuku, readchar);
-			l := l + 1;
-			tipeDataBuku := tipeDataBuku + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 2) ) do
-		begin
-		
-			arrDataBuku[k].judul := arrDataBuku[k].judul + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		end;
-	3 : 
-		begin
-		if ( (readchar = ',') and (l < lenBuku) ) then
-		begin
-			read(filebuku, readchar);
-			l := l + 1;
-			tipeDataBuku := tipeDataBuku + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 3) ) do
-		begin
-		
-			arrDataBuku[k].author := arrDataBuku[k].author + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;	
-		
-		end;
-		
-	4 : begin
-		if ( (readchar = ',') and (l < lenBuku) ) then
-		begin
-			read(filebuku, readchar);
-			l := l + 1;
-			tipeDataBuku := tipeDataBuku + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 4) ) do
-		begin
-		
-			arrDataBuku[k].jumlah := arrDataBuku[k].jumlah + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		end;
-		
-	5 : begin
-		if ( (readchar = ',') and (l < lenBuku) ) then
-		begin
-			read(filebuku, readchar);
-			l := l + 1;
-			tipeDataBuku := tipeDataBuku + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 5) ) do
-		begin
-		
-			arrDataBuku[k].tahunterbit := arrDataBuku[k].tahunterbit + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		end;
-	
-	6 : begin
-		if ( (readchar = ',') and (l < lenBuku) ) then 
-		begin
-			tipeDataBuku := 1;
-			k := k + 1;
-			readln(filebuku, readchar); // Next Line (Untuk Menghindari 'new line' dalam Array
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		while ( (readchar <> ',') and (l < lenBuku) and (tipeDataBuku = 6) ) do
-		begin
-			arrDataBuku[k].kategori := arrDataBuku[k].kategori + readchar;
-			read(filebuku, readchar);
-			l := l + 1;
-		end;
-		
-		{readln(filebuku,readline);
-		arrDataBuku[k].kategori := readline;
-		l := l + length(arrDataBuku[k].kategori);
-		tipeDataBuku := 1;
-		readln(filebuku,readchar);
-		l := l + 1;}
-		
-		
-		end;
-	
-	end; // End of Case tipeDataBuku
-	
-until (l >= lenBuku);
-
-Close(filebuku);
-
-	{writeln(arrDataPeminjaman[1].username);
-	writeln(arrDataPeminjaman[1].idBuku);
-	writeln(arrDataPeminjaman[1].datePinjam.day);
-	writeln(arrDataPeminjaman[1].batasKembali.day);
-	writeln('');
-	writeln(arrDataPeminjaman[2].username);} // Testing the Array of Database
 	
 	notFound := True;
 
-	for m := 1 to k do
+	for m := 1 to LoadNeffData.Buku do
 	begin
 		if (id = arrDataBuku[m].idBuku) then
 		begin
@@ -426,10 +61,9 @@ Close(filebuku);
 		end;
 	end;
 
-
 	m := 1;
 
-	while (notFound and (m <= i)) do
+	while (notFound and (m <= LoadNeffData.Peminjaman)) do
 	begin
 
 	if (arrDataPeminjaman[m].username = username) and (arrDataPeminjaman[m].idBuku = id) and (arrDataPeminjaman[m].status = 'belum') then
@@ -443,10 +77,62 @@ Close(filebuku);
 		'/', arrDataPeminjaman[m].batasKembali.year);
 
 		arrDataPeminjaman[m].status := 'sudah';
-		notFound := False;
+ 		notFound := False;
 		strBatasDay := arrDataPeminjaman[m].batasKembali.day;
 		strBatasMonth := arrDataPeminjaman[m].batasKembali.month;
 		strBatasYear := arrDataPeminjaman[m].batasKembali.year;
+		jumlahSebelum := arrDataBuku[m].jumlah;
+
+
+		// Perubahan Jumlah Buku yang ada di Perpus pada File Buku.csv
+			if (jumlahSebelum[1] <> '') and (jumlahSebelum[2] = '') then
+			begin
+
+				if ( (integer(jumlahSebelum[1]) - 48) = 9) then
+				begin
+					puluhanJumlahBuku := char(49);
+					satuanJumlahBuku := char(48);
+					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+				end else
+				begin
+					satuanJumlahBuku := char( (integer(jumlahSebelum[1]) + 1) );
+					arrDataBuku[m].jumlah := satuanJumlahBuku;
+				end;
+				
+			end else if (jumlahSebelum[2] <> '') and (jumlahSebelum[3] = '') then
+			begin
+
+				if ( (integer(jumlahSebelum[2]) - 48) = 9) then
+				begin
+					if (jumlahSebelum[1] = '9' ) then
+					begin
+						ratusanJumlahBuku := char(49);
+						puluhanJumlahBuku := char(48); 
+						satuanJumlahBuku := char(48);
+						arrDataBuku[m].jumlah := ratusanJumlahBuku + puluhanJumlahBuku + satuanJumlahBuku;
+					end else if (jumlahSebelum[2] = '9') then
+					begin
+						puluhanJumlahBuku := char ( integer(jumlahSebelum[1]) + 1 );
+						satuanJumlahBuku := char(48);
+						arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+					end else
+					begin
+						puluhanJumlahBuku := char ( integer(jumlahSebelum[1])  );
+						satuanJumlahBuku := char ( integer(jumlahSebelum[2]) + 1  );
+					end;
+					
+					
+				end else
+				begin
+					puluhanJumlahBuku := char( integer(jumlahSebelum[1]) );
+					satuanJumlahBuku := char( integer(jumlahSebelum[2]) + 1  );
+					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+				end;
+
+				
+			end;
+
+
 	end;
 	m := m + 1;
 
@@ -473,7 +159,7 @@ Close(filebuku);
 	dateNowYear := (integer(dateNow[7]) - 48) * 1000 + (integer(dateNow[8]) - 48) * 100 + (integer(dateNow[9]) - 48) * 10 +
 	(integer(dateNow[10]) - 48);
 
-	pesan := 'Terima kasih sudah meminjam';
+	pesan := 'Terima kasih sudah meminjam.';
 	pesanTelat := 'Anda terlambat mengembalikan buku.';
 
 	if not(notFound) then
@@ -505,7 +191,56 @@ Close(filebuku);
 		end;
 	end;
 
+	writeln('Jumlah Sebelum : ',jumlahSebelum);
+	writeln('Jumlah Satuan Setelah : ',satuanJumlahBuku);
 	
+end; // End of Procedure Pengembalian
+
+
+procedure UpdatePengembalian;
+
+var
+	FilePeminjaman : text;
+	counter : integer;
+	updatePeminjaman : string;
+	updateBuku : string;
+
+begin
+	assign(FilePeminjaman,'peminjamandummy.csv');
+	rewrite(FilePeminjaman);
+	updatePeminjaman := 'Username' + ',' + 'ID_Buku' + ',' + 'Tanggal_Peminjaman' + ',' +
+	'Tanggal_Batas_Peminjaman' + ',' + 'Status_Pengembalian' + ',';
+	writeln(FilePeminjaman,updatePeminjaman);
+	counter := 1;
+	while (arrDataPeminjaman[counter].idBuku <> '') do
+	begin
+		updatePeminjaman := arrDataPeminjaman[counter].username + ',' + arrDataPeminjaman[counter].idBuku + ',' +
+		arrDataPeminjaman[counter].datePinjam.day + '/' +
+		arrDataPeminjaman[counter].datePinjam.month + '/' + arrDataPeminjaman[counter].datePinjam.year + ',' +
+		arrDataPeminjaman[counter].batasKembali.day + '/' + arrDataPeminjaman[counter].batasKembali.month + '/' +
+		arrDataPeminjaman[counter].batasKembali.year + ',' + arrDataPeminjaman[counter].status + ',';
+		writeln(FilePeminjaman,updatePeminjaman);
+		counter := counter + 1;
+	end;
+	close(FilePeminjaman);
+
+
+	// Re-Write File Buku.csv
+	assign(FileBuku,'bukudummy.csv');
+	rewrite(FileBuku);
+	updateBuku := 'ID_Buku,Judul_Buku,Author,Jumlah_Buku,Tahun_Penerbit,Kategori,';
+	writeln(FileBuku,updateBuku);
+	counter := 1;
+	while (arrDataBuku[counter].judul <> '') do
+	begin
+		updateBuku := arrDataBuku[counter].idBuku + ',' + arrDataBuku[counter].judul + ',' + arrDataBuku[counter].author + ',' +
+		arrDataBuku[counter].jumlah + ',' + arrDataBuku[counter].tahunterbit + ',' + arrDataBuku[counter].kategori + ',';
+		writeln(FileBuku,updateBuku);
+		counter := counter + 1;
+	end;
+	close(FileBuku);
+	
+
 end; // End of Procedure Pengembalian
 
 end.
