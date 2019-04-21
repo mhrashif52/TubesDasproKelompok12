@@ -27,7 +27,7 @@ var
 	
 {ALGORITMA}
 begin
-	assign(PinjamBuku, 'peminjaman.csv');
+	assign(PinjamBuku, 'buku.csv');
 	reset(PinjamBuku);
 	i := 1;
 	repeat
