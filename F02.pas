@@ -1,4 +1,4 @@
-unit Login;
+unit F02;
 {Unit yang berguna untuk login akun yang sudah terdaftar sebelumnya}
 
 interface
@@ -22,12 +22,14 @@ implementation
 			readln(Akun_Temp.password);
 			valid := 0;
 			
-			for i:= 1 to (NMax-1) do
+			for i:= 0 to (NMax-1) do
 				begin
-					if(arrDataAkun[i].username = Akun_Temp.username) and (arrDataAkun[i].password = Akun_Temp.password) then
+					if(Akun_Temp.username = arrDataAkun[i].username) and (Akun_Temp.password = arrDataAkun[i].password ) then
 						begin
 							valid := 1;
 							namaTemp := arrDataAkun[i].nama;
+							usernameLogin := arrDataAkun[i].username;
+							userLoginStatus := arrDataAkun[i].role;
 						end;
 				end;
 
