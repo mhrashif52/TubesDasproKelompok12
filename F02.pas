@@ -45,11 +45,11 @@ implementation
 								begin
 									valid := 1;
 									namaTemp := arrDataAkun[i].nama;
+									usernameLogin := arrDataAkun[i].username;
+									userLoginStatus := arrDataAkun[i].role;
 								end;
 						end;
 				end;
-			
-			usernameLogin := arrDataAkun[i].username;
 			writeln('Selamat Datang ',namaTemp,'!');
 		end;
-end.
+end.	
