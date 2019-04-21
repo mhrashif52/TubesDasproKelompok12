@@ -1,12 +1,10 @@
-unit F02;
+unit Login;
 {Unit yang berguna untuk login akun yang sudah terdaftar sebelumnya}
-{Unit ini dipanggil di program utama pada awal interface terbuka}
 
 interface
 	uses Record_Perpus;
-	
 	procedure loginAkun(var arrDataAkun : array of akun);
-	{procedure loginAkun digunakan untuk login dengan memanggil data akun yang sudah terload}
+
 implementation
 	procedure loginAkun(var arrDataAkun : array of akun);
 		const
@@ -51,7 +49,7 @@ implementation
 						end;
 				end;
 			
+			usernameLogin := arrDataAkun[i].username;
 			writeln('Selamat Datang ',namaTemp,'!');
 		end;
-end.	
-		
+end.
