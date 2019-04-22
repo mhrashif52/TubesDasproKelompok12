@@ -1,6 +1,6 @@
 Program Tubes;
 
-uses Record_Perpus,F01,F02,F11,F06,F13,F14,F07,F12;
+uses Record_Perpus,F01,F02,F03,F11,F06,F08,F13,F14,F07,F12;
 
 var
 
@@ -8,6 +8,7 @@ var
 	UsernameRiwayat : string; // Username untuk melihat riwayat username (Unit F11)
 	quitProgram : boolean;
 	SaveOrNot : char;
+	kat, com : string;
 
 begin
 
@@ -54,7 +55,8 @@ begin
 
 		1 : begin 
 				//procedure 03
-
+				readln(kat);
+				CariKat(kat);
 			end;
 		
 		2 : begin
@@ -145,6 +147,10 @@ begin
 		
 		6 : begin
 				//procedure 08
+				//LihatLaporanHilang
+				writeln('Ketik "Lihat buku hilang" untuk melihat daftar buku yang hilang');
+				readln(com);
+				LihatLap(com);
 			end;
 		
 		7 : begin
