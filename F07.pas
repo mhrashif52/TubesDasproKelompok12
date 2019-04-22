@@ -2,7 +2,7 @@ unit F07;
 {Unit yang berguna untuk melaporkan berkas hilang}
 
 interface
-	uses Record_Perpus;
+	uses Record_Perpus, F13;
 	procedure laporHilang(var arrDataHilang : array of DataHilang);
 	
 implementation
@@ -11,14 +11,14 @@ implementation
 			JudulBuku_Dummy : string;
 			
 		begin
-			nefDataHilang := nefDataHilang + 1;
-			arrDataHilang[nefDataHilang].username := usernameLogin;
+			LoadNeffData.Hilang := LoadNeffData.Hilang + 1;
+			arrDataHilang[LoadNeffData.Hilang].username := usernameLogin;
 			write('Masukkan id buku: ');
-			readln(arrDataHilang[nefDataHilang].idBuku_Hilang);
+			readln(arrDataHilang[LoadNeffData.Hilang].idBuku_Hilang);
 			write('Masukkan judul buku: ');
 			readln(JudulBuku_Dummy);
 			write('Masukkan tanggal pelaporan: ');
-			readln(arrDataHilang[nefDataHilang].Tanggal_Laporan);
+			readln(arrDataHilang[LoadNeffData.Hilang].Tanggal_Laporan);
 			writeln('');
 			writeln('Laporan berhasil diterima.');
 		end;
