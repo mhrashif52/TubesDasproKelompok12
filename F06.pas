@@ -15,6 +15,7 @@ var
 	
 	FileBuku : textfile;
 	jumlahSebelum : string;
+	jumlahSesudah : string;
 	satuanJumlahBuku : char;
 	puluhanJumlahBuku : char;
 	ratusanJumlahBuku : char;
@@ -58,10 +59,69 @@ begin
 		if (id = arrDataBuku[m].idBuku) then
 		begin
 			bookTitleFromID := arrDataBuku[m].judul;
+			jumlahSebelum := arrDataBuku[m].jumlah;
+
+			// Perubahan Jumlah Buku yang ada di Perpus pada File Buku.csv
+				
+			if (integer(jumlahSebelum[1]) >= 48) and (integer(jumlahSebelum[1]) <= 57 ) and (integer(jumlahSebelum[2]) >= 48) and (integer(jumlahSebelum[2]) <= 57 ) then
+			begin
+
+				if ( (integer(jumlahSebelum[2]) - 48) = 9) then
+				begin
+					if (jumlahSebelum[1] = '9' ) then
+					begin
+						ratusanJumlahBuku := char(49);
+						puluhanJumlahBuku := char(48); 
+						satuanJumlahBuku := char(48);
+						arrDataBuku[m].jumlah := ratusanJumlahBuku + puluhanJumlahBuku + satuanJumlahBuku;
+						jumlahSesudah := arrDataBuku[m].jumlah;
+					end else if (jumlahSebelum[2] = '9') then
+					begin
+						puluhanJumlahBuku := char ( integer(jumlahSebelum[1]) + 1 );
+						satuanJumlahBuku := char(48);
+						arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+						jumlahSesudah := arrDataBuku[m].jumlah;
+					end else
+					begin
+						puluhanJumlahBuku := char ( integer(jumlahSebelum[1])  );
+						satuanJumlahBuku := char ( integer(jumlahSebelum[2]) + 1  );
+						arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+						jumlahSesudah := arrDataBuku[m].jumlah;
+					end;
+					
+					
+				end else
+				begin
+					puluhanJumlahBuku := char( integer(jumlahSebelum[1]) );
+					satuanJumlahBuku := char( integer(jumlahSebelum[2]) + 1  );
+					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+					jumlahSesudah := arrDataBuku[m].jumlah;
+				end;
+			
+			end else if (integer(jumlahSebelum[1]) >= 48) and (integer(jumlahSebelum[1]) <= 57 ) then
+			begin
+
+				if ( (integer(jumlahSebelum[1]) - 48) = 9) then
+				begin
+					puluhanJumlahBuku := char(49);
+					satuanJumlahBuku := char(48);
+					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
+					jumlahSesudah := arrDataBuku[m].jumlah;
+				end else
+				begin
+					satuanJumlahBuku := char( (integer(jumlahSebelum[1]) + 1) );
+					arrDataBuku[m].jumlah := satuanJumlahBuku;
+					jumlahSesudah := arrDataBuku[m].jumlah;
+				end;
+			end;
 		end;
 	end;
 
 	m := 1;
+
+
+
+
 
 	while (notFound and (m <= LoadNeffData.Peminjaman)) do
 	begin
@@ -81,57 +141,6 @@ begin
 		strBatasDay := arrDataPeminjaman[m].batasKembali.day;
 		strBatasMonth := arrDataPeminjaman[m].batasKembali.month;
 		strBatasYear := arrDataPeminjaman[m].batasKembali.year;
-		jumlahSebelum := arrDataBuku[m].jumlah;
-
-
-		// Perubahan Jumlah Buku yang ada di Perpus pada File Buku.csv
-			if (jumlahSebelum[1] <> '') and (jumlahSebelum[2] = '') then
-			begin
-
-				if ( (integer(jumlahSebelum[1]) - 48) = 9) then
-				begin
-					puluhanJumlahBuku := char(49);
-					satuanJumlahBuku := char(48);
-					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
-				end else
-				begin
-					satuanJumlahBuku := char( (integer(jumlahSebelum[1]) + 1) );
-					arrDataBuku[m].jumlah := satuanJumlahBuku;
-				end;
-				
-			end else if (jumlahSebelum[2] <> '') and (jumlahSebelum[3] = '') then
-			begin
-
-				if ( (integer(jumlahSebelum[2]) - 48) = 9) then
-				begin
-					if (jumlahSebelum[1] = '9' ) then
-					begin
-						ratusanJumlahBuku := char(49);
-						puluhanJumlahBuku := char(48); 
-						satuanJumlahBuku := char(48);
-						arrDataBuku[m].jumlah := ratusanJumlahBuku + puluhanJumlahBuku + satuanJumlahBuku;
-					end else if (jumlahSebelum[2] = '9') then
-					begin
-						puluhanJumlahBuku := char ( integer(jumlahSebelum[1]) + 1 );
-						satuanJumlahBuku := char(48);
-						arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
-					end else
-					begin
-						puluhanJumlahBuku := char ( integer(jumlahSebelum[1])  );
-						satuanJumlahBuku := char ( integer(jumlahSebelum[2]) + 1  );
-					end;
-					
-					
-				end else
-				begin
-					puluhanJumlahBuku := char( integer(jumlahSebelum[1]) );
-					satuanJumlahBuku := char( integer(jumlahSebelum[2]) + 1  );
-					arrDataBuku[m].jumlah := puluhanJumlahBuku + satuanJumlahBuku;
-				end;
-
-				
-			end;
-
 
 	end;
 	m := m + 1;
@@ -191,8 +200,7 @@ begin
 		end;
 	end;
 
-	writeln('Jumlah Sebelum : ',jumlahSebelum);
-	writeln('Jumlah Satuan Setelah : ',satuanJumlahBuku);
+	writeln('');
 	
 end; // End of Procedure Pengembalian
 
@@ -206,7 +214,7 @@ var
 	updateBuku : string;
 
 begin
-	assign(FilePeminjaman,'peminjamandummy.csv');
+	assign(FilePeminjaman,'peminjaman.csv');
 	rewrite(FilePeminjaman);
 	updatePeminjaman := 'Username' + ',' + 'ID_Buku' + ',' + 'Tanggal_Peminjaman' + ',' +
 	'Tanggal_Batas_Peminjaman' + ',' + 'Status_Pengembalian' + ',';
@@ -226,7 +234,7 @@ begin
 
 
 	// Re-Write File Buku.csv
-	assign(FileBuku,'bukudummy.csv');
+	assign(FileBuku,'buku.csv');
 	rewrite(FileBuku);
 	updateBuku := 'ID_Buku,Judul_Buku,Author,Jumlah_Buku,Tahun_Penerbit,Kategori,';
 	writeln(FileBuku,updateBuku);
