@@ -1,6 +1,6 @@
 Program Tubes;
 
-uses Record_Perpus,F01,F02,F11,F06,F13,F14;
+uses Record_Perpus,F01,F02,F11,F06,F13,F14,F07,F12;
 
 var
 
@@ -76,7 +76,7 @@ begin
 			end;
 		6 : begin
 				//procedure 14
-				save;
+				save(arrDataPeminjaman,arrDataBuku,arrDataHilang,arrDataAkun,arrDataKembali);
 			end;
 		
 		7 : begin
@@ -158,6 +158,7 @@ begin
 		
 		10 : begin
 				//procedure 12
+				Statistik(arrDataBuku,arrDataAkun);
 			end;
 
 		11 : begin
@@ -170,7 +171,7 @@ begin
 		
 		13 : begin
 				//Procedure 14
-				save;
+				save(arrDataPeminjaman,arrDataBuku,arrDataHilang,arrDataAkun,arrDataKembali);
 			end;
 
 		14 : begin
