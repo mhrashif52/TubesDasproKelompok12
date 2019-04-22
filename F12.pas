@@ -21,9 +21,9 @@ implementation
 			
 		begin
 			{Data Banyak Pengguna awal}
-			admin := 0;
+			admin := 1;
 			pengunjung := 0;
-			total_pengguna := 0;
+			total_pengguna := 1;
 			
 			{Data Banyak Buku awal}
 			sastra := 0;
@@ -86,5 +86,6 @@ implementation
 			writeln('sejarah | ',sejarah);
 			writeln('programming | ',programming);
 			writeln('Total | ',total_buku);
+			writeln('');
 		end;
 end.
