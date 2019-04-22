@@ -2,8 +2,17 @@ Unit F14;
 {Unit yang berguna untuk menyimpan sesuai dengan nama file yang ada}
 
 interface
-	uses Record_Perpus;
-	procedure Save(var arrDataPeminjaman : array of DataPeminjaman; arrDataBuku : array of DataBuku; arrDataKehilangan : array of DataHilang; arrDataAkun : array of Akun; arrDataPengembalian : array of DataKembali);
+	uses Record_Perpus,F13;
+	
+	var
+		// Standard Variable
+		NamaFilePeminjaman, NamaFileBuku, NamaFileUser, NamaFilePengembalian, NamaFileKehilangan : string;
+		counter : integer;
+		
+		// Variabel textfile
+		FilePeminjaman,FileBuku,FilePengembalian,FileKehilangan,FileUser : text;
+	
+	procedure getFileNameSave;
 	{	Masukkan nama File Buku: buku.csv
 		Masukkan nama File User: user.csv
 		Masukkan nama File Peminjaman: peminjaman.csv
@@ -11,36 +20,39 @@ interface
 		Masukkan nama File Buku Hilang: kehilangan.csv
 		Data berhasil disimpan!
 	}
-	
-	
-implementation
-	procedure Save(var arrDataPeminjaman : array of DataPeminjaman; arrDataBuku : array of DataBuku; arrDataKehilangan : array of DataHilang; arrDataAkun : array of Akun; arrDataPengembalian : array of DataKembali);
-		var
-			FilePeminjaman,FileBuku,FilePengembalian,FileKehilangan,FileUser : textfile;
-			NamaFilePeminjaman, NamaFileBuku, NamaFileUser, NamaFilePengembalian, NamaFileKehilangan : string; // Mengambil Nama File
-			
-			counter : integer;
-			updatePeminjaman : string;
-			updateBuku : string;
-			updateUser : string;
-			updatePengembalian : string;
-			updateKehilangan : string;
+		
+	procedure SaveDataPeminjaman(var NamaFilePeminjaman : string);
+	procedure SaveDataBuku(var NamaFileBuku : string);
+	procedure SaveDataUser (var NamaFileUser : string);
+	procedure SaveDataPengembalian (var NamaFilePengembalian : string);
+	procedure SaveDataKehilangan(var NamaFileKehilangan : string);
 
+implementation
+	procedure getFileNameSave;
 		begin
 			write('Masukkan nama File Buku: ');
 			readln(NamaFileBuku);
+					
 			write('Masukkan nama File User: ');
 			readln(NamaFileUser);
+					
 			write('Masukkan nama File Peminjaman: ');
 			readln(NamaFilePeminjaman);
+					
 			write('Masukkan nama File Pengembalian: ');
 			readln(NamaFilePengembalian);
+					
 			write('Masukkan nama File Buku Hilang: ');
 			readln(NamaFileKehilangan);
-			
-			
-			//Re-Write File peminjaman
-			
+					
+			write('File perpustakaan berhasil dimuat!');
+		end;
+	
+	procedure SaveDataPeminjaman(var NamaFilePeminjaman : string);
+		var
+			updatePeminjaman : string;
+		begin
+			//Re-Write File peminjaman		
 			assign(FilePeminjaman,NamaFilePeminjaman);
 			rewrite(FilePeminjaman);
 			updatePeminjaman := 'Username' + ',' + 'ID_Buku' + ',' + 'Tanggal_Peminjaman' + ',' +
@@ -58,8 +70,12 @@ implementation
 				counter := counter + 1;
 			end;
 			close(FilePeminjaman);
-
-
+		end;
+	
+	procedure SaveDataBuku(var NamaFileBuku : string);
+		var
+			updateBuku : string;
+		begin
 			// Re-Write File Buku.csv
 			assign(FileBuku,NamaFileBuku);
 			rewrite(FileBuku);
@@ -74,7 +90,12 @@ implementation
 				counter := counter + 1;
 			end;
 			close(FileBuku);
+		end;
 			
+	procedure SaveDataUser (var NamaFileUser : string);
+		var
+			updateUser : string;
+		begin
 			// Re-Write File user.csv
 			assign(FileUser,NamaFileUser);
 			rewrite(FileUser);
@@ -89,33 +110,43 @@ implementation
 					counter := counter + 1;
 				end;
 			close(FileUser);
+		end;
+		
+	procedure SaveDataPengembalian (var NamaFilePengembalian : string);
+		var
+			updatePengembalian : string;
 			
+		begin
 			// Re-Write File Pengembalian
 			assign(FilePengembalian,NamaFilePengembalian);
 			rewrite(FilePengembalian);
 			updatePengembalian := 'Username,ID_Buku,Tanggal_Pengembalian,';
 			writeln(FilePengembalian,updatePengembalian);
 			counter := 1;
-			while (arrDataPengembalian[counter].username <> '') do
+			while (arrDataKembali[counter].username <> '') do
 				begin
-					updatePengembalian := arrDataPengembalian[counter].username + ',' + arrDataPengembalian[counter].idBuku + ',' + arrDataPengembalian[counter].TanggalKembali.day + '/' +
-					arrDataPengembalian[counter].TanggalKembali.month + '/' + arrDataPengembalian[counter].TanggalKembali.year + ',';
+					updatePengembalian := arrDataKembali[counter].username + ',' + arrDataKembali[counter].idBuku + ',' + arrDataKembali[counter].TanggalKembali.day + '/' +
+					arrDataKembali[counter].TanggalKembali.month + '/' + arrDataKembali[counter].TanggalKembali.year + ',';
 					writeln(FilePengembalian,updatePengembalian);
 					counter := counter + 1;
 				end;
 			close(FilePengembalian);
-			
+		end;	
 						
+	procedure SaveDataKehilangan(var NamaFileKehilangan : string);
+		var
+			updateKehilangan : string;
+		begin
 			// Re-Write File Kehilangan
 			assign(FileKehilangan, NamaFileKehilangan);
 			rewrite(FileKehilangan);
 			updateKehilangan := 'Username,ID_Buku_Hilang,Tanggal_Laporan,';
 			writeln(FileKehilangan,updateKehilangan);
 			counter := 1;
-			while (arrDataKehilangan[counter].username <> '') do
+			while (arrDataHilang[counter].username <> '') do
 				begin
-					updateKehilangan := arrDataKehilangan[counter].username + ',' + arrDataKehilangan[counter].idBuku + ',' + arrDataKehilangan[counter].tanggalLaporan.day + '/' +
-					arrDataKehilangan[counter].tanggalLaporan.month + '/' + arrDataKehilangan[counter].tanggalLaporan.year + ',';
+					updateKehilangan := arrDataHilang[counter].username + ',' + arrDataHilang[counter].idBuku + ',' + arrDataHilang[counter].tanggalLaporan.day + '/' +
+					arrDataHilang[counter].tanggalLaporan.month + '/' + arrDataHilang[counter].tanggalLaporan.year + ',';
 					writeln(FileKehilangan,updateKehilangan);
 					counter := counter + 1;
 				end;
