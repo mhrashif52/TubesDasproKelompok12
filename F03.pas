@@ -2,8 +2,8 @@
 (* Kelas: 03 *)
 (* Tanggal : 08 - 04 - 2019 *)
 
-//Unit carikategori;
-Program carikategori;
+Unit F03;
+//Program carikategori;
 (* Definisi *) 
 (* Pengunjung dan admin dapat melakukan pencarian buku berdasarkan kategori. Terdapat lima
 kategori buku sastra, sains, manga, sejarah, dan programming. Hasil pencarian yang
@@ -19,7 +19,7 @@ secara leksikografis (pengurutan seperti kamus). *)
 	Hasil pencarian:
 	Tidak ada buku dalam kategori ini.*)
 
-//interface
+interface
 	type
 		Data = record
 			ID : integer;
@@ -33,14 +33,16 @@ secara leksikografis (pengurutan seperti kamus). *)
 		buku, arrnew : array [1..10000] of Data;
 		i, j : integer;
 		stop : boolean;
+		Kat : string;
 		//Nmax : integer;
 	
 	{ Deklarasi Fungsi/Prosedur }
-	//	procedure ValidKat (kat : string);
-		//procedure CariKat (kat : string);
+	procedure ValidKat (var kat : string);
+	procedure UrutLeksikografis (var T : array of Data);
+	procedure CariKat (var kat : string);
 		
-//implementation
-	procedure ValidKat (kat : string);
+implementation
+	procedure ValidKat (var kat : string);
 	{ Kategori yang dimasukkan belum tentu valid, jadi lakukan input 
 	hingga kategori valid (merupakan salah satu dari 5 kategori.}
 		begin
@@ -62,47 +64,57 @@ secara leksikografis (pengurutan seperti kamus). *)
 	{ Mengurutkan keluaran pencarian secara urut seperti pada kamus }
 		{Kamus Lokal}
 		var
-		i : integer; { indeks untuk traversal tabel }
-		Pass : integer; { tahapan pengurutan }
-		Temp : integer; { penampung nilai sementara, untuk pergeseran }
-		//arr : array [1..10000] of integer;
+		i,j,k, temp1, panjang : integer;
+		Temp2, Temp3 : string;	
+		TdkSama : boolean;
+		{ ALGORITMA }
 		begin
-			
-		
-		end;
-		
-		
-		
-	{ ALGORITMA }
-		begin
-			for Pass := 65 to 90 do
-				begin
-					Temp := T[pass].ju[1]; { Simpan harga T[Pass] sebelum pergeseran }
-					{ Sisipkan elemen ke Pass dalam T[1..Pass-1] sambil menggeser:}
-					i := Pass-1;
-					while (Temp < T[i].ju[1]) and (i > 1) do
-						begin
-							T[i+1].ju[1] := T[i].ju[1]; { Geser }
-							i := i – 1; { Berikutnya }
+		j := 0;
+		for k := 1 to 10000 do
+			begin
+				for j := 1 to 10000 do
+					begin
+						TdkSama := False;
+						if (length(T[j].ju) > length(T[j+1].ju)) then
+							begin
+								panjang := length(T[j+1].ju);
+						end else
+							begin
+								panjang := length(T[j].ju);
 						end;
-					{ Temp >= T[i] (tempat yg tepat) or i = 1 (sisipkan sbg elmt pertama) }
-					if (Temp >= T[i]) then
-						T[i+1] := Temp { Menemukan tempat yg tepat }
-					else
-						begin
-							T[i+1] := T[i];
-							T[i] := Temp; { sisipkan sbg elemen pertama }
-						end; { T[1..Pass] terurut membesar: T[1]<=T[2]<=T[3]<=...<=T[Pass] }
-				end;
-					{ Seluruh tabel terurut, karena Pass = N: T[1]<=T[2]<=...<=T[N] }
-
+						i := 1;
+						while (TdkSama = False) and (i < panjang) do
+							begin
+								if (integer(T[j].ju[i]) > integer(T[j+1].ju[i])) then
+									begin
+										i := i + 1;
+								end else if (integer(T[j].ju[i])) = integer(T[j+1].ju[i]) then
+									begin
+										temp1 := T[j].id;
+										temp2 := T[j].ju;
+										temp3 := T[j].au;
+										T[j].id := T[j+1].id;
+										T[j].ju := T[j+1].ju;
+										T[j].au := T[j+1].au;
+										T[j+1].id := temp1;
+										T[j+1].ju := temp2;
+										T[j+1].au := temp3;
+										TdkSama := True;
+								end else
+									begin
+										TdkSama := True;
+									end;
+							end;
+					end;
+			end;	
 		end;
 
 	procedure CariKat (var kat : string);
-	{ Mencari buku sesuai kategori };
+	{ Mencari buku sesuai kategori }
 		var
 			count : integer;
 		begin
+			j := 0;
 			count := 0;
 			ValidKat(kat);
 			writeln('Hasil Pencarian');
@@ -110,22 +122,24 @@ secara leksikografis (pengurutan seperti kamus). *)
 					begin
 						if (buku[i].kat = kat) then
 							begin
-								for j := 1 to 10000 do
-									begin
-										buku[i] := arrnew[j];
-									end;
+								buku[i].ID := arrnew[j].ID;
+								buku[i].Ju := arrnew[j].Ju;
+								buku[i].Au := arrnew[j].Au;
+								j := j + 1;
 								count := count + 1;
 								//writeln(buku.ID[i], ' | ', buku.Ju, ' | ', buku.Au);
 						end else
 							begin
 								count := count;
-								writeln('Tidak ada buku dalam kategori ini.');
 							end;
 					end;
 				if (count > 0) then
 					begin
-						UrutLeksikografis(arrnew.ju[1]);
+						UrutLeksikografis(arrnew);
+				end else
+					begin
+						writeln('Tidak ada buku dalam kategori ini.');
 					end;
 		end;
+end.
 
-Carikat(buku);
