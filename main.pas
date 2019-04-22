@@ -1,6 +1,6 @@
 Program Tubes;
 
-uses Record_Perpus,F01,F02,F11,F06,F13;
+uses Record_Perpus,F01,F02,F11,F06,F13,F14;
 
 var
 
@@ -44,7 +44,8 @@ begin
 		writeln('3 - Peminjaman Buku');
 		writeln('4 - Pengembalian Buku');
 		writeln('5 - Melaporkan Buku Hilang');
-		writeln('6 - Exit Program');
+		writeln('6 - Save');
+		writeln('7 - Exit Program');
 		writeln('');
 		write('Masukkan pilihan: ');
 		readln(doAction);
@@ -73,8 +74,12 @@ begin
 				//procedure 07
 				laporHilang(arrDataHilang);
 			end;
-		
 		6 : begin
+				//procedure 14
+				save;
+			end;
+		
+		7 : begin
 				write('Apakah anda mau melakukan penyimpanan file yang sudah dilakukan (Y/N) ? ');
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
@@ -164,7 +169,8 @@ begin
 			end;
 		
 		13 : begin
-			//Procedure 15
+				//Procedure 14
+				save;
 			end;
 
 		14 : begin
