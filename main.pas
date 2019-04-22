@@ -76,7 +76,12 @@ begin
 			end;
 		6 : begin
 				//procedure 14
-				save(arrDataPeminjaman,arrDataBuku,arrDataHilang,arrDataAkun,arrDataKembali);
+				getFileNameSave;
+				SaveDataPeminjaman(NamaFilePeminjaman);
+				SaveDataBuku(NamaFileBuku);
+				SaveDataUser(NamaFileUser);
+				SaveDataPengembalian(NamaFilePengembalian);
+				SaveDataKehilangan(NamaFileKehilangan);
 			end;
 		
 		7 : begin
@@ -171,7 +176,12 @@ begin
 		
 		13 : begin
 				//Procedure 14
-				save(arrDataPeminjaman,arrDataBuku,arrDataHilang,arrDataAkun,arrDataKembali);
+				getFileNameSave;
+				SaveDataPeminjaman(NamaFilePeminjaman);
+				SaveDataBuku(NamaFileBuku);
+				SaveDataUser(NamaFileUser);
+				SaveDataPengembalian(NamaFilePengembalian);
+				SaveDataKehilangan(NamaFileKehilangan);
 			end;
 
 		14 : begin
