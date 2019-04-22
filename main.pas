@@ -71,6 +71,7 @@ begin
 			end;
 		5 : begin
 				//procedure 07
+				laporHilang(arrDataHilang);
 			end;
 		
 		6 : begin
@@ -128,6 +129,7 @@ begin
 			end;
 		5 : begin
 				//procedure 07
+				laporHilang(arrDataHilang);
 			end;
 		
 		6 : begin
