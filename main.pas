@@ -102,7 +102,8 @@ begin
 		writeln('10 - Statistik');
 		writeln('11 - Pencarian Anggota');
 		writeln('12 - Register Akun');
-		writeln('13 - Exit Program');
+		writeln('13 - Save');
+		writeln('14 - Exit Program');
 		writeln('');
 		write('Masukkan pilihan: ');
 		readln(doAction);
@@ -161,8 +162,12 @@ begin
 		12 : begin
 				registerAkun;
 			end;
-
+		
 		13 : begin
+			//Procedure 15
+			end;
+
+		14 : begin
 				write('Apakah anda mau melakukan penyimpanan file yang sudah dilakukan (Y/N) ? ');
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
