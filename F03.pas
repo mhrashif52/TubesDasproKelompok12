@@ -20,7 +20,8 @@ secara leksikografis (pengurutan seperti kamus). *)
 	Tidak ada buku dalam kategori ini.*)
 
 interface
-	type
+uses F13, record_perpus;
+	{type
 		Data = record
 			ID : integer;
 			Ju : string;
@@ -28,9 +29,9 @@ interface
 			Jm : integer;
 			Tp : string;
 			Kat : string;
-	end;
+	end;}
 	var 
-		buku, arrnew : array [1..10000] of Data;
+		buku, arrnew : array [1..NMax] of DataBuku;
 		i, j : integer;
 		stop : boolean;
 		Kat : string;
@@ -38,7 +39,7 @@ interface
 	
 	{ Deklarasi Fungsi/Prosedur }
 	procedure ValidKat (var kat : string);
-	procedure UrutLeksikografis (var T : array of Data);
+	procedure UrutLeksikografis (var T : array of DataBuku; cou : integer);
 	procedure CariKat (var kat : string);
 		
 implementation
@@ -60,51 +61,62 @@ implementation
 			until stop; 
 		end;
 	
-	procedure UrutLeksikografis (var T : array of Data);
+	procedure UrutLeksikografis (var T : array of DataBuku; cou : integer);
 	{ Mengurutkan keluaran pencarian secara urut seperti pada kamus }
 		{Kamus Lokal}
 		var
-		i,j,k, temp1, panjang : integer;
-		Temp2, Temp3 : string;	
-		TdkSama : boolean;
+		i,j,k,len : integer;
+		tempoid,tempoju, tempoau, tempo1,tempo2, tempo3 : string;	
+		Cek : boolean;
 		{ ALGORITMA }
 		begin
-		j := 0;
-		for k := 1 to 10000 do
+		i := 0;
+		for k := 1 to cou do
 			begin
-				for j := 1 to 10000 do
+				for i := 1 to cou do
 					begin
-						TdkSama := False;
-						if (length(T[j].ju) > length(T[j+1].ju)) then
+						Cek := False;  //Cek diinisiasi false
+						if (length(T[i].judul) > length(T[i+1].judul)) then
 							begin
-								panjang := length(T[j+1].ju);
+								len := length(T[i+1].judul);
+						end else if (length(T[i].judul) = length(T[i+1].judul)) then
+							begin
+								len := length(T[i].judul);
+								tempoid := T[i].idBuku;
+								T[i].idBuku := T[i+1].idBuku;
+								T[i+1].idBuku := tempoid;
+								tempoju := T[i].judul;
+								T[i].judul := T[i+1].judul;
+								T[i+1].judul := tempoju;
+								tempoau := T[i].author;
+								T[i].author := T[i+1].author;
+								T[i+1].author := tempoau;
 						end else
 							begin
-								panjang := length(T[j].ju);
+								len := length(T[i].judul);
 						end;
-						i := 1;
-						while (TdkSama = False) and (i < panjang) do
-							begin
-								if (integer(T[j].ju[i]) > integer(T[j+1].ju[i])) then
+						j := 1;
+						repeat
+								if (integer(T[i].judul[j]) = integer(T[i+1].judul[j])) then
 									begin
-										i := i + 1;
-								end else if (integer(T[j].ju[i])) = integer(T[j+1].ju[i]) then
+										j := j + 1;
+								end else if (integer(T[i].judul[j])) > integer(T[i+1].judul[j]) then
 									begin
-										temp1 := T[j].id;
-										temp2 := T[j].ju;
-										temp3 := T[j].au;
-										T[j].id := T[j+1].id;
-										T[j].ju := T[j+1].ju;
-										T[j].au := T[j+1].au;
-										T[j+1].id := temp1;
-										T[j+1].ju := temp2;
-										T[j+1].au := temp3;
-										TdkSama := True;
-								end else
-									begin
-										TdkSama := True;
-									end;
-							end;
+										tempo1 := T[i].idBuku;
+										T[i].idBuku := T[i+1].idBuku;
+										T[i+1].idBuku := tempo1;
+										tempo2 := T[i].judul;
+										T[i].judul := T[i+1].judul;
+										T[i+1].judul := tempo2;
+										tempo3 := T[i].author;
+										T[i].author := T[i+1].author;
+										T[i+1].author := tempo3;
+										Cek := True;
+									end else
+										begin
+											Cek := True;
+										end;
+						 until ((Cek = True) or (j >= len));
 					end;
 			end;	
 		end;
@@ -118,13 +130,13 @@ implementation
 			count := 0;
 			ValidKat(kat);
 			writeln('Hasil Pencarian');
-				for i := 1 to 10000 do
+				for i := 1 to LoadNeffData.Buku do
 					begin
-						if (buku[i].kat = kat) then
+						if (arrDataBuku[i].kategori = kat) then
 							begin
-								buku[i].ID := arrnew[j].ID;
-								buku[i].Ju := arrnew[j].Ju;
-								buku[i].Au := arrnew[j].Au;
+								arrDataBuku[i].idBuku := arrnew[j].idBuku;
+								arrDataBuku[i].judul := arrnew[j].judul;
+								arrDataBuku[i].author := arrnew[j].author;
 								j := j + 1;
 								count := count + 1;
 								//writeln(buku.ID[i], ' | ', buku.Ju, ' | ', buku.Au);
@@ -135,7 +147,7 @@ implementation
 					end;
 				if (count > 0) then
 					begin
-						UrutLeksikografis(arrnew);
+						UrutLeksikografis(arrnew,count);
 				end else
 					begin
 						writeln('Tidak ada buku dalam kategori ini.');
