@@ -91,7 +91,7 @@ begin
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
 				begin
-					UpdatePengembalian;
+					Update;
 				end;
 				quitProgram := True;
 			end;
@@ -196,7 +196,7 @@ begin
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
 				begin
-					UpdatePengembalian;
+					Update;
 					updateRegisterAkun(InputAkun);
 				end;
 				quitProgram := True;
