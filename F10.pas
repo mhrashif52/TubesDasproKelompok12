@@ -5,8 +5,8 @@ program tambah_jumlah_buku;
 type
 	DataBuku = Record
 		ID_Buku : Integer;
-		Sisa_Buku : Integer;
-		Nama_Buku : String;
+		Jumlah_Buku : Integer;
+		Judul_Buku : String;
 	end;
 var
 	Tambah_Buku : Integer;
@@ -23,19 +23,18 @@ begin
 	repeat
 		read(TambahBuku, data_buku);
 		TabDataBk[i].ID_Buku := data_buku.ID_Buku;
-		TabDataBk[i].Sisa_Buku := data_buku.Jumlah_Buku;
-		TabDataBk[i].Nama_Buku := data_buku.Judul_Buku;
+		TabDataBk[i].Jumlah_Buku := data_buku.Jumlah_Buku;
+		TabDataBk[i].Judul_Buku := data_buku.Judul_Buku;
 		i := i + 1;
-	until (eof(PinjamBuku));
+	until (eof(TambahBuku));
 	write('Masukan ID Buku: ');
 	readln(InIDBuku);
 	write('Masukkan jumlah buku yang ditambahkan: ');
 	readln(Tambah_Buku);
 	while (InIDBuku = TabDataBk[i].ID_Buku) do
 	begin
-	TabDataBk[i].Sisa_Buku := TabDataBk[i].Sisa_Buku + Tambah_Buku;
+	TabDataBk[i].Jumlah_Buku := TabDataBk[i].Jumlah_Buku + Tambah_Buku;
 	end;
-	writeln('Pembaharuan jumlah buku berhasil dilakukan, total buku', TabDataBk[i].Nama_Buku, 'di perpustakan menjadi ', TabDataBk[i].Sisa_Buku)
+	writeln('Pembaharuan jumlah buku berhasil dilakukan, total buku', TabDataBk[i].Judul_Buku, 'di perpustakan menjadi ', TabDataBk[i].Jumlah_Buku)
 end.
-	
 	
