@@ -2,7 +2,7 @@ unit F01;
 
 interface
 
-uses Record_Perpus,F13temp;	
+uses Record_Perpus,F13;	
 
 var
 	// Variables to Write
