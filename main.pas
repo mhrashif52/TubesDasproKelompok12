@@ -124,7 +124,8 @@ begin
 
 		1 : begin 
 				//procedure 03
-
+				readln(kat);
+				CariKat(kat);
 			end;
 		
 		2 : begin
