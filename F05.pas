@@ -83,6 +83,7 @@ begin
     // Input Data Peminjaman ke dalam array arrDataPeminjaman
     if (statusPeminjaman) then
     begin
+    	writeln('Terima kasih sudah meminjam!');
         LoadNeffData.Peminjaman := LoadNeffData.Peminjaman + 1;
         arrDataPeminjaman[LoadNeffData.Peminjaman].username := username;
         arrDataPeminjaman[LoadNeffData.Peminjaman].idBuku := idBuku;
