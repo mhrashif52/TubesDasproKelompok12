@@ -61,17 +61,20 @@ const
 var
 	arrDataPeminjaman : array [1..NMax] of DataPeminjaman;
 	arrDataBuku : array [1..NMax] of DataBuku;
-
+	arrNewBook : array[1..NMax] of BukuBaru;
+	
 	usernameLogin : string; // Username 
 	userLoginStatus : string; // 'admin' atau 'pengunjung'
 	username : string;
 	idBuku : string;
 	InputAkun : Akun;
+	InputBukuBaru : BukuBaru;
 	NeffAkunBaru : integer;
+	NeffBukuBaru : integer;
 
 implementation
 begin
 	NeffAkunBaru := 0;
+	NeffBukuBaru := 0;
 
 end.
-				
