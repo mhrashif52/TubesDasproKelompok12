@@ -8,11 +8,12 @@ var
 	Bukufile : text;
 	textline : string;
 	arrNewBook : array[1..NMax] of DataBuku;
+	InputBukuBaru : DataBuku;
 	
 	
 procedure registerBukuBaru;
 
-procedure updateregisterBukuBaru(InputBukuBaru : DataBuku);
+procedure updateregisterBukuBaru(arrNewBook : array of DataBuku);
 
 
 implementation
@@ -43,7 +44,7 @@ begin
 	arrNewBook[NeffBukuBaru].kategori := InputBukuBaru.kategori;
 end;
 
-procedure updateregisterBukuBaru(InputBukuBaru : DataBuku);
+procedure updateregisterBukuBaru(arrNewBook : array of DataBuku);
 var
 	j : integer;
 begin
@@ -51,8 +52,8 @@ begin
 	system.Append(Bukufile);
 	for j := 1 to NeffBukuBaru do
 	begin
-		textLine := arrNewBook[j].idBuku + ',' + arrNewBook[j].judul + ',' + arrNewBook[j].author +
-		',' + arrNewBook[j].tahunterbit + ',';
+		textLine := arrNewBook[j].idBuku + ',' + arrNewBook[j].judul + ',' + arrNewBook[j].author + ','+ arrNewBook[j].jumlah +
+		',' + arrNewBook[j].tahunterbit + ',' + arrNewBook[j].kategori + ',' ;
 		writeln(Bukufile,textline);
 end;
 writeln('Buku berhasil ditambakan');
@@ -60,4 +61,4 @@ Close(Bukufile);
 end;
 
 end.
-		
+	
