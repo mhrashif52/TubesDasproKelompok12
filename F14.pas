@@ -26,7 +26,8 @@ interface
 	procedure SaveDataUser (var NamaFileUser : string);
 	procedure SaveDataPengembalian (var NamaFilePengembalian : string);
 	procedure SaveDataKehilangan(var NamaFileKehilangan : string);
-
+	procedure Update;
+	
 implementation
 	procedure getFileNameSave;
 		begin
@@ -45,7 +46,8 @@ implementation
 			write('Masukkan nama File Buku Hilang: ');
 			readln(NamaFileKehilangan);
 					
-			write('File perpustakaan berhasil dimuat!');
+			writeln('File perpustakaan berhasil disimpan!');
+			writeln('');
 		end;
 	
 	procedure SaveDataPeminjaman(var NamaFilePeminjaman : string);
@@ -152,5 +154,98 @@ implementation
 				end;
 			close(FileKehilangan);
 		end; // End of Procedure Save
+	
+	procedure Update;
+		var
+			FilePeminjaman : text;
+			counter : integer;
+			updatePeminjaman : string;
+			updateBuku : string;
+			updateKehilangan : string;
+			updateUser : string;
+			updatePengembalian : string;
+
+		begin
+			// Re-Write file Peminjaman.csv
+			assign(FilePeminjaman,'peminjaman.csv');
+			rewrite(FilePeminjaman);
+			updatePeminjaman := 'Username' + ',' + 'ID_Buku' + ',' + 'Tanggal_Peminjaman' + ',' +
+			'Tanggal_Batas_Peminjaman' + ',' + 'Status_Pengembalian' + ',';
+			writeln(FilePeminjaman,updatePeminjaman);
+			counter := 1;
+			while (arrDataPeminjaman[counter].idBuku <> '') do
+			begin
+				updatePeminjaman := arrDataPeminjaman[counter].username + ',' + arrDataPeminjaman[counter].idBuku + ',' +
+				arrDataPeminjaman[counter].datePinjam.day + '/' +
+				arrDataPeminjaman[counter].datePinjam.month + '/' + arrDataPeminjaman[counter].datePinjam.year + ',' +
+				arrDataPeminjaman[counter].batasKembali.day + '/' + arrDataPeminjaman[counter].batasKembali.month + '/' +
+				arrDataPeminjaman[counter].batasKembali.year + ',' + arrDataPeminjaman[counter].status + ',';
+				writeln(FilePeminjaman,updatePeminjaman);
+				counter := counter + 1;
+			end;
+			close(FilePeminjaman);
+
+
+			// Re-Write File Buku.csv
+			assign(FileBuku,'buku.csv');
+			rewrite(FileBuku);
+			updateBuku := 'ID_Buku,Judul_Buku,Author,Jumlah_Buku,Tahun_Penerbit,Kategori,';
+			writeln(FileBuku,updateBuku);
+			counter := 1;
+			while (arrDataBuku[counter].judul <> '') do
+			begin
+				updateBuku := arrDataBuku[counter].idBuku + ',' + arrDataBuku[counter].judul + ',' + arrDataBuku[counter].author + ',' +
+				arrDataBuku[counter].jumlah + ',' + arrDataBuku[counter].tahunterbit + ',' + arrDataBuku[counter].kategori + ',';
+				writeln(FileBuku,updateBuku);
+				counter := counter + 1;
+			end;
+			close(FileBuku);
+			
+			// Re-Write File Kehilangan.csv
+			assign(FileKehilangan, 'kehilangan.csv');
+			rewrite(FileKehilangan);
+			updateKehilangan := 'Username,ID_Buku_Hilang,Tanggal_Laporan,';
+			writeln(FileKehilangan,updateKehilangan);
+			counter := 1;
+			while (arrDataHilang[counter].username <> '') do
+				begin
+					updateKehilangan := arrDataHilang[counter].username + ',' + arrDataHilang[counter].idBuku + ',' + arrDataHilang[counter].tanggalLaporan.day + '/' +
+					arrDataHilang[counter].tanggalLaporan.month + '/' + arrDataHilang[counter].tanggalLaporan.year + ',';
+					writeln(FileKehilangan,updateKehilangan);
+					counter := counter + 1;
+				end;
+			close(FileKehilangan);
+
+			// Re-Write File user.csv
+			assign(FileUser,'user.csv');
+			rewrite(FileUser);
+			updateUser := 'Nama,Alamat,Username,Password,Role,';
+			writeln(FileUser,updateUser);
+			counter := 1;
+			while (arrDataAkun[counter].nama <> '') do
+				begin
+					updateUser := arrDataAkun[counter].nama + ',' + arrDataAkun[counter].alamat + ',' + arrDataAkun[counter].username + ',' +
+					arrDataAkun[counter].password + ',' + arrDataAkun[counter].role + ',';
+					writeln(FileUser,updateUser);
+					counter := counter + 1;
+				end;
+			close(FileUser);
+			
+			// Re-Write File Pengembalian
+			assign(FilePengembalian,'pengembalian.csv');
+			rewrite(FilePengembalian);
+			updatePengembalian := 'Username,ID_Buku,Tanggal_Pengembalian,';
+			writeln(FilePengembalian,updatePengembalian);
+			counter := 1;
+			while (arrDataKembali[counter].username <> '') do
+				begin
+					updatePengembalian := arrDataKembali[counter].username + ',' + arrDataKembali[counter].idBuku + ',' + arrDataKembali[counter].TanggalKembali.day + '/' +
+					arrDataKembali[counter].TanggalKembali.month + '/' + arrDataKembali[counter].TanggalKembali.year + ',';
+					writeln(FilePengembalian,updatePengembalian);
+					counter := counter + 1;
+				end;
+			close(FilePengembalian);
+			
+		end;
 
 end. // End of Unit
