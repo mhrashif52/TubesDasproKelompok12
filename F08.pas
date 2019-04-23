@@ -2,6 +2,7 @@
 (* Kelas: 03 *)
 (* Tanggal : 08 - 04 - 2019 *)
 
+
 Unit F08; 
 (* Definisi *) 
 (* Admin bisa menuliskan command untuk menampilkan laporan buku yang hilang. *)
@@ -14,11 +15,9 @@ Unit F08;
 
 interface
 uses F13, record_perpus;
+
 	var 
-		//hil : array [1..10000] of DataHilang;
-		//all : array [1..10000] of DataBuku;
 		i, j : integer;
-		//Nmax : integer;
 		
 	{ Deklarasi Fungsi/Prosedur }
 		procedure LihatLap (var com : string);
@@ -26,9 +25,7 @@ uses F13, record_perpus;
 implementation
 	procedure LihatLap (var com : string);
 	{ Melihat laporan buku-buku yang hilang}
-	begin
-		writeln('Ketik "Lihat buku hilang" untuk melihat daftar buku yang hilang');
-		readln(com);
+	begin	
 		if (com = 'Lihat buku hilang') then
 			begin
 				writeln('Buku yang hilang :');
