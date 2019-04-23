@@ -26,7 +26,6 @@ uses F13, record_perpus;
 		i, j : integer;
 		stop : boolean;
 		Kat : string;
-		//Nmax : integer;
 	
 	{ Deklarasi Fungsi/Prosedur }
 	procedure ValidKat (var kat : string);
@@ -56,60 +55,64 @@ implementation
 	{ Mengurutkan keluaran pencarian secara urut seperti pada kamus }
 		{Kamus Lokal}
 		var
-		i,j,k,len : integer;
+		i,j,l,len : integer;
 		tempoid,tempoju, tempoau, tempo1,tempo2, tempo3 : string;	
 		Cek : boolean;
 		{ ALGORITMA }
 		begin
-		i := 0;
-		for k := 1 to cou do
-			begin
-				for i := 1 to cou do
-					begin
-						Cek := False;  //Cek diinisiasi false
-						if (length(T[i].judul) > length(T[i+1].judul)) then
-							begin
-								len := length(T[i+1].judul);
-						end else if (length(T[i].judul) = length(T[i+1].judul)) then
-							begin
-								len := length(T[i].judul);
-								tempoid := T[i].idBuku;
-								T[i].idBuku := T[i+1].idBuku;
-								T[i+1].idBuku := tempoid;
-								tempoju := T[i].judul;
-								T[i].judul := T[i+1].judul;
-								T[i+1].judul := tempoju;
-								tempoau := T[i].author;
-								T[i].author := T[i+1].author;
-								T[i+1].author := tempoau;
-						end else
-							begin
-								len := length(T[i].judul);
-						end;
-						j := 1;
-						repeat
-								if (integer(T[i].judul[j]) = integer(T[i+1].judul[j])) then
-									begin
-										j := j + 1;
-								end else if (integer(T[i].judul[j])) > integer(T[i+1].judul[j]) then
-									begin
-										tempo1 := T[i].idBuku;
-										T[i].idBuku := T[i+1].idBuku;
-										T[i+1].idBuku := tempo1;
-										tempo2 := T[i].judul;
-										T[i].judul := T[i+1].judul;
-										T[i+1].judul := tempo2;
-										tempo3 := T[i].author;
-										T[i].author := T[i+1].author;
-										T[i+1].author := tempo3;
-										Cek := True;
-									end else
+			i := 0;
+			for k := 1 to cou do
+				begin
+					for i := 1 to cou do
+						begin
+							Cek := False;  //Cek diinisiasi false
+							if (length(T[i].judul) > length(T[i+1].judul)) then
+								begin
+									len := length(T[i+1].judul);
+							end else if (length(T[i].judul) = length(T[i+1].judul)) then
+								begin
+									len := length(T[i].judul);
+									tempoid := T[i].idBuku;
+									T[i].idBuku := T[i+1].idBuku;
+									T[i+1].idBuku := tempoid;
+									tempoju := T[i].judul;
+									T[i].judul := T[i+1].judul;
+									T[i+1].judul := tempoju;
+									tempoau := T[i].author;
+									T[i].author := T[i+1].author;
+									T[i+1].author := tempoau;
+							end else
+								begin
+									len := length(T[i].judul);
+								end;
+								j := 1;
+								repeat
+									if (integer(T[i].judul[j]) = integer(T[i+1].judul[j])) then
 										begin
+											j := j + 1;
+									end else if (integer(T[i].judul[j])) > integer(T[i+1].judul[j]) then
+										begin
+											tempo1 := T[i].idBuku;
+											T[i].idBuku := T[i+1].idBuku;
+											T[i+1].idBuku := tempo1;
+											tempo2 := T[i].judul;
+											T[i].judul := T[i+1].judul;
+											T[i+1].judul := tempo2;
+											tempo3 := T[i].author;
+											T[i].author := T[i+1].author;
+											T[i+1].author := tempo3;
 											Cek := True;
-										end;
-						 until ((Cek = True) or (j >= len));
-					end;
-			end;	
+										end else
+											begin
+												Cek := True;
+											end;
+								until ((Cek = True) or (j >= len));
+						end;
+				end;	
+			for l := 1 to cou do
+				begin
+					writeln(T[l].idBuku, ' | ', T[l].Judul, ' | ', T[l].Author);
+				end;
 		end;
 
 	procedure CariKat (var kat : string);
@@ -117,7 +120,7 @@ implementation
 		var
 			count : integer;
 		begin
-			j := 0;
+			j := 1;
 			count := 0;
 			ValidKat(kat);
 			writeln('Hasil Pencarian');
@@ -130,8 +133,7 @@ implementation
 								arrDataBuku[i].author := arrnew[j].author;
 								j := j + 1;
 								count := count + 1;
-								//writeln(buku.ID[i], ' | ', buku.Ju, ' | ', buku.Au);
-						end else
+					end else
 							begin
 								count := count;
 							end;
@@ -145,4 +147,3 @@ implementation
 					end;
 		end;
 end.
-
