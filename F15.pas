@@ -23,14 +23,20 @@ begin
 	i := 1;
 	repeat
 		read(CariUser, data_user);
-		TabDataBk[i].Username := data_user.Username;
-		TabDataBk[i].Nama := data_user.Nama;
-		TabDataBk[i].Alamat := data_user.Alamat;
+		TabDataUser[i].Username := data_user.Username;
+		TabDataUser[i].Nama := data_user.Nama;
+		TabDataUser[i].Alamat := data_user.Alamat;
 		i := i + 1;
-	until (eof(PinjamBuku));
+	until (eof(CariUser));
 	Write('Masukkan Username: ');
 	readln(InUsername);
-	while (InUsername = TabDataBk[i].Username) do
-	writeln('Nama Anggota: ', TabDataBk[i].Nama);
-	writeln('Alamat Anggota: ', TabDataBk[i].Alamat);
+	if (InUsername = TabDataUser[i].Username) then
+	begin
+		writeln('Nama Anggota: ', TabDataUser[i].Nama);
+		writeln('Alamat Anggota: ', TabDataUser[i].Alamat);
+	end
+	else if (InUsername <> TabDataUser[i].Username) then
+	begin
+		writeln('Pengguna tidak ditemukan');
+	end
 end.
