@@ -1,40 +1,156 @@
-program tambah_jumlah_buku;
-{ Melakukan penambahan jumlah buku sesuai dengan ID buku yang dimasukan }
+unit F10;
 
-{KAMUS}
-type
-	DataBuku = Record
-		ID_Buku : Integer;
-		Jumlah_Buku : Integer;
-		Judul_Buku : String;
-	end;
+interface
+
+uses Record_Perpus, F13;
+
+const
+    NMax = 10000;
+
+
+
+
+procedure TambahJumlahBuku(arrDataBuku : array of DataBuku);
+
+
+implementation
+
+procedure TambahJumlahBuku(arrDataBuku : array of DataBuku);
 var
-	Tambah_Buku : Integer;
-	InIDBuku : Integer;
-	TambahBuku : file of DataBuku;
-	data_buku : DataBuku;
-	TabDataBk : array [1..1000000] of DataBuku;
-	i : integer;
-{ALGORITMA}
+    idBuku : string;
+    jumlahBukuBaru : string;
+    jumlahBukuLama : string;
+    jumlahTotal : string;
+    satuan : char;
+    puluhan : char;
+    ratusan : char;
+    i : integer;
+
 begin
-	assign(TambahBuku, 'buku.csv');
-	reset(TambahBuku);
-	i := 1;
-	repeat
-		read(TambahBuku, data_buku);
-		TabDataBk[i].ID_Buku := data_buku.ID_Buku;
-		TabDataBk[i].Jumlah_Buku := data_buku.Jumlah_Buku;
-		TabDataBk[i].Judul_Buku := data_buku.Judul_Buku;
-		i := i + 1;
-	until (eof(TambahBuku));
-	write('Masukan ID Buku: ');
-	readln(InIDBuku);
-	write('Masukkan jumlah buku yang ditambahkan: ');
-	readln(Tambah_Buku);
-	while (InIDBuku = TabDataBk[i].ID_Buku) do
-	begin
-	TabDataBk[i].Jumlah_Buku := TabDataBk[i].Jumlah_Buku + Tambah_Buku;
-	end;
-	writeln('Pembaharuan jumlah buku berhasil dilakukan, total buku', TabDataBk[i].Judul_Buku, 'di perpustakan menjadi ', TabDataBk[i].Jumlah_Buku)
+    write('Masukkan ID Buku : ');
+    readln(idBuku);
+    write('Masukkan jumlah buku yang ditambahkan: ');
+    readln(jumlahBukuBaru);
+    for i:=1 to LoadNeffData.Buku do
+    begin
+        if (idBuku = arrDataBuku[i].idBuku) then
+        begin
+            jumlahBukuLama := arrDataBuku[i].jumlah;
+            if ((integer(jumlahBukuLama[1]) >= 48) and (integer(jumlahBukuLama[1]) <= 57 ) and (integer(jumlahBukuLama[2]) >= 48) and (integer(jumlahBukuLama[2]) <= 57 )) then
+            begin
+                if ((integer(jumlahBukuBaru[1]) >= 48) and (integer(jumlahBukuBaru[1]) <= 57 ) and (integer(jumlahBukuBaru[2]) >= 48) and (integer(jumlahBukuBaru[2]) <= 57 )) then
+                begin
+                    puluhan := char( integer(jumlahBukuBaru[1]) + integer(jumlahBukuLama[1]) - 48 );
+                    satuan := char ( integer(jumlahBukuBaru[2]) + integer(jumlahBukuLama[2])  - 48 );
+
+                    if ( integer(satuan) > 57) then
+                    begin
+                        puluhan := char ( integer(puluhan) + 1);
+                        satuan := char ( integer(satuan) - 10);
+                    end;
+
+                    if ( integer(puluhan) > 57 ) then
+                    begin
+                        ratusan := '1';
+                        puluhan := char( integer(puluhan) - 10);
+                        jumlahTotal := ratusan + puluhan + satuan;
+                    end else
+                    begin
+                        jumlahTotal := puluhan + satuan;
+                    end;
+                    
+                end else // Jika Buku Baru ada puluhan dan Buku Lama hanya satuan
+                begin
+                    puluhan := jumlahBukuBaru[1];
+                    satuan := char( integer(jumlahBukuBaru[2]) + integer(jumlahBukuLama[2]) - 48 );
+
+                    if ( integer(puluhan) > 57) then
+                    begin
+                        ratusan := '1';
+                        puluhan := char ( integer(puluhan) - 10 );
+                        jumlahTotal := ratusan + puluhan + satuan;
+                    end else
+                    begin
+                        jumlahTotal := puluhan + satuan;
+                    end;
+
+                end;
+
+            arrDataBuku[i].jumlah := jumlahTotal;
+
+            end else if ((integer(jumlahBukuLama[1]) >= 48) and (integer(jumlahBukuLama[1]) <= 57 ) and (integer(jumlahBukuLama[2]) >= 48) and (integer(jumlahBukuLama[2]) <= 57 )) then // Buku Lama 2 digit
+            begin
+
+                if ((integer(jumlahBukuBaru[1]) >= 48) and (integer(jumlahBukuBaru[1]) <= 57 ) and (integer(jumlahBukuBaru[2]) >= 48) and (integer(jumlahBukuBaru[2]) <= 57 )) then
+                begin
+                    puluhan := char( integer(jumlahBukuBaru[1]) + integer(jumlahBukuLama[1]) - 48 );
+                    satuan := char ( integer(jumlahBukuBaru[2]) + integer(jumlahBukuLama[2])  - 48 );
+
+                    if ( integer(satuan) > 57) then
+                    begin
+                        puluhan := char ( integer(puluhan) + 1);
+                        satuan := char ( integer(satuan) - 10);
+                    end;
+
+                    if ( integer(puluhan) > 57 ) then
+                    begin
+                        ratusan := '1';
+                        puluhan := char( integer(puluhan) - 10);
+                        jumlahTotal := ratusan + puluhan + satuan;
+                    end else
+                    begin
+                        jumlahTotal := puluhan + satuan;
+                    end;
+                    
+                end else // Jika Buku Lama ada puluhan dan Buku Baru hanya satuan
+                begin
+                    puluhan := jumlahBukuLama[1];
+                    satuan := char( integer(jumlahBukuBaru[2]) + integer(jumlahBukuLama[2]) - 48 );
+
+                    if ( integer(satuan) > 57 ) then
+                    begin
+                        satuan := char( integer(satuan) - 10);
+                        puluhan := char( integer(puluhan) + 1 );
+                    end;
+
+                    if ( integer(puluhan) > 57) then
+                    begin
+                        ratusan := '1';
+                        puluhan := char ( integer(puluhan) - 10 );
+                        jumlahTotal := ratusan + puluhan + satuan;
+                    end else
+                    begin
+                        jumlahTotal := puluhan + satuan;
+                    end;
+                
+
+                end;
+
+            arrDataBuku[i].jumlah := jumlahTotal;
+
+            end else
+            begin
+                satuan := char( integer(jumlahBukuBaru[1]) + integer(jumlahBukuLama[1]) - 48 );
+                if ( integer(satuan) > 57 ) then
+                begin
+                    puluhan := '1';
+                    satuan := char ( integer(satuan) - 10 );
+
+                end;
+
+                 jumlahTotal := puluhan + satuan;
+                arrDataBuku[i].jumlah := jumlahTotal;
+            end;       
+
+        writeln('Pembaharuan jumlah buku berhasil dilakukan, total buku ', arrDataBuku[i].judul, ' di perpustakaan menjadi ', arrDataBuku[i].jumlah);
+
+
+        end; // End of if IdInput = IdBuku
+
+    end; // End of Looping
+
+
+
+end; // End of Procedure TambahBuku
+
 end.
-	
