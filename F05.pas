@@ -1,81 +1,379 @@
-program pinjam_buku;
+unit F05;
 {Program untuk melakukan peminjaman buku, Untuk melakukan peminjaman 
 * pengunjung harus login terlebih dahulu. Dapat diasumsikan id buku dan 
-* tanggal yang dimasukkan valid. Namun, bisa saja buku yang ingin 
+* day yang dimasukkan valid. Namun, bisa saja buku yang ingin 
 * dipinjam sedang habis (out of stock). }
 
 {KAMUS}
-type
-	Waktu = Record
-		Tanggal: Integer;
-		Bulan : Integer;
-		Tahun	: Integer;
-	DataBuku : Record
-		ID_Buku : Integer;
-		Sisa_Buku : Integer;
-		Nama_Buku : String;
-	end;
-end;
-var
-	PinjamBuku : file of DataBuku;
-	data_buku : DataBuku;
-	W : Waktu;
-	InIDBuku : Integer;
-	TabDataBk : array [1..1000000] of DataBuku;
-	i : integer;
-	stop : boolean;
-	
-{ALGORITMA}
+interface
+
+uses Record_Perpus,F13;
+
+
+procedure PinjamBuku(username : string);
+
+procedure gantiHari7(dateNow, dateBatas : string);
+procedure gantiBulan(dateNow, dateBatas : string);
+procedure gantiTahun(dateNow, dateBatas : string);
+
+procedure updatePeminjaman;
+
+implementation
+
+
+procedure gantiTahun(dateNow, dateBatas : string);
 begin
-	assign(PinjamBuku, 'buku.csv');
-	reset(PinjamBuku);
-	i := 1;
-	repeat
-		read(PinjamBuku, data_buku);
-		TabDataBk[i].ID_Buku := data_buku.ID_Buku;
-		TabDataBk[i].Sisa_Buku := data_buku.Jumlah_Buku;
-		TabDataBk[i].Nama_Buku := data_buku.Judul_Buku;
-		i := i + 1;
-	until (eof(PinjamBuku));
-	stop := False;
-	write('Masukkan id buku yang ingin dipinjam: ');
-	readln(InIDBUKU);
-	repeat
-	write('Masukkan tanggal hari ini: ');
-	read(Waktu.Tanggal);
-	write('/');
-	read(Waktu.Bulan);
-	write('/');
-	readln(Waktu.Tahun);
-	if ((Waktu.Tanggal < 0 or Waktu.Tanggal > 31) or (Waktu.Bulan < 0 or Waktu.Bulan > 12) or (Waktu.Tahun < 0)) then
-	begin
-		writeln('Waktu yang anda masukkan tidak valid, coba isikan kembali');
-		stop := false;
-	end
-	else if ((Waktu.Tanggal > 0 and Waktu.Tanggal < 31) and (Waktu.Bulan > 0 and Waktu.Bulan < 12) and (Waktu.Tahun > 0)) then
-	begin
-		stop := true;
-	end
-	until (stop);
-	if (InIDBuku = TabDataBk[i].Nama_Buku) then
-	begin
-		if (TabDataBk[i].Sisa_Buku > 0) then
+    if (dateNow[10] = '9') then
+    begin
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+
+        dateBatas[10] := '0';
+        dateBatas[9] := char ( integer(dateNow[9]) + 1  );
+    end else
+    begin
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := char( integer(dateNow[10]) + 1  );
+
+    end;
+
+end;
+
+procedure gantiBulan(dateNow, dateBatas : string);
+begin
+    if (dateNow[5] = '9') then
+    begin
+        dateBatas[5] := '0';
+        dateBatas[4] := '1';
+        // Tahun sama
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := dateNow[10];
+    end else if (dateNow[4] = '1') and (dateNow[5] = '2') then
+    begin
+        dateBatas[4] := '0';
+        dateBatas[5] := '1';
+        gantiTahun(dateNow, dateBatas);
+    end else
+    begin
+        dateBatas[4] := dateNow[4];
+        dateBatas[5] := char( integer(dateNow[5]) + 1 );
+        // Tahun sama
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := dateNow[10];
+    end;
+
+end;
+
+procedure gantiHari7(dateNow, dateBatas : string);
+begin
+    if (dateNow[1] = '3') then
+    begin
+        dateBatas[1] := '0';
+        dateBatas[2] := '7';
+        gantiBulan(dateNow, dateBatas);
+    end else if ( integer(dateNow[2]) >= 51 ) then
+    begin
+        dateBatas[1] := char( integer(dateNow[1]) + 1  );
+        dateBatas[2] := char( integer(dateNow[1]) - 3);
+
+
+        dateBatas[4] := dateNow[4];
+        dateBatas[5] := dateNow[5];
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := dateNow[10];
+    end;
+
+end;
+
+
+
+
+procedure PinjamBuku(username : string);
+var
+    idBuku : string;
+    dateNow : string;
+    i : integer;
+    bookTitle : string;
+    jumlahSebelum : string;
+    jumlahSatuanBuku : char;
+    jumlahPuluhanBuku : char;
+    statusPeminjaman : boolean;
+    dateBatas : string;
+
+begin
+    
+    write('Masukkan id buku yang ingin dipinjam: ');
+    readln(idBuku);
+    write('Masukkan tanggal hari ini: ');
+    readln(dateNow);
+
+    statusPeminjaman := True; // Initial State : Peminjaman Berhasil
+
+    for i:=1 to LoadNeffData.buku do
+    begin
+        if (arrDataBuku[i].idBuku = idBuku) then
+        begin
+            bookTitle := arrDataBuku[i].judul;
+            jumlahSebelum := arrDataBuku[i].jumlah;
+
+            // Checking How Many Books are left in the Library
+
+            if (integer(jumlahSebelum[1]) >= 48) and (integer(jumlahSebelum[1]) <= 57 ) and (integer(jumlahSebelum[2]) >= 48) and (integer(jumlahSebelum[2]) <= 57 ) then
+            begin
+                if ( (integer(jumlahSebelum[2]) - 48) = 0) then
+				begin
+					jumlahPuluhanBuku := char(integer(jumlahSebelum[1]) - 1);
+                    jumlahSatuanBuku := '9';
+                    arrDataBuku[i].jumlah := jumlahPuluhanBuku + jumlahSatuanBuku;
+                end else
+                begin
+                    jumlahPuluhanBuku := char(integer(jumlahSebelum[1]));
+                    jumlahSatuanBuku := char(integer(jumlahSebelum[2]) - 1);
+                    arrDataBuku[i].jumlah := jumlahPuluhanBuku + jumlahSatuanBuku;
+                end;
+
+            end else
+            begin
+                if (jumlahSebelum = '0') then
+                begin
+                    writeln('Buku ', bookTitle, ' sedang habis!' );
+                    writeln('Coba lain kali!');
+                    statusPeminjaman := False; // Peminjaman gagal karena stock habis
+                end else
+                begin
+                    jumlahSatuanBuku := char(integer(jumlahSebelum[1]) - 1);
+                    arrDataBuku[i].jumlah := jumlahSatuanBuku;
+                end;
+            end; // End of Checking amount of books
+
+
+
+        end; // End of arrDataBuku.idBuku = idBuku
+
+    end; // End of Looping in arrDataBuku
+
+    // Input Data Peminjaman ke dalam array arrDataPeminjaman
+    if (statusPeminjaman) then
+    begin
+        LoadNeffData.Peminjaman := LoadNeffData.Peminjaman + 1;
+        arrDataPeminjaman[LoadNeffData.Peminjaman].username := username;
+        arrDataPeminjaman[LoadNeffData.Peminjaman].idBuku := idBuku;
+        arrDataPeminjaman[LoadNeffData.Peminjaman].datePinjam.day := dateNow[1] + dateNow [2];
+        arrDataPeminjaman[LoadNeffData.Peminjaman].datePinjam.month:= dateNow[4] + dateNow [5];
+        arrDataPeminjaman[LoadNeffData.Peminjaman].datePinjam.year := dateNow[7] + dateNow [8] + dateNow[9] + dateNow[10];
+        arrDataPeminjaman[LoadNeffData.Peminjaman].status := 'belum';
+
+
+        {
+        Dec   |   Char
+        48    |     0
+        49    |     1
+        50    |     2
+        51    |     3
+        52    |     4
+        53    |     5
+        54    |     6
+        55    |     7
+        56    |     8
+        57    |     9
+        }
+
+        // Menentukan batas kembali, anggap max tanggal adalah 30
+        dateBatas := '00/00/0000';
+
+        if (dateNow[1] = '3') then
+    begin
+        dateBatas[1] := '0';
+        dateBatas[2] := '7';
+        
+		// Ganti Bulan
+		if (dateNow[5] = '9') then
 		begin
-			Writeln('Buku', TabDataBk[i].Nama_Buku, 'berhasil dipinjam!');
-			Writeln('Tersisa', TabDataBk[i].Sisa_Buku, 'buku',  TabDataBk[i].Nama_Buku);
-			Writeln('Terima kasih sudah meminjam.');
-		end
-		else {Sisa_Buku <= 0} 
+			dateBatas[5] := '0';
+			dateBatas[4] := '1';
+			// Tahun sama
+			dateBatas[7] := dateNow[7];
+			dateBatas[8] := dateNow[8];
+			dateBatas[9] := dateNow[9];
+			dateBatas[10] := dateNow[10];
+		end else if (dateNow[4] = '1') and (dateNow[5] = '2') then
 		begin
-			Writeln('Buku', TabDataBk[i].Nama_Buku, 'sedang habis!');
-			Writeln('Coba lain kali');
+			dateBatas[4] := '0';
+			dateBatas[5] := '1';
+			// Ganti Tahun
+			if (dateNow[10] = '9') then
+			begin
+				dateBatas[7] := dateNow[7];
+				dateBatas[8] := dateNow[8];
+
+				dateBatas[10] := '0';
+				dateBatas[9] := char ( integer(dateNow[9]) + 1  );
+			end else
+			begin
+				dateBatas[7] := dateNow[7];
+				dateBatas[8] := dateNow[8];
+
+				dateBatas[9] := dateNow[9];
+				dateBatas[10] := char( integer(dateNow[10]) + 1  );
+
+			end;
+
+			// End of Ganti Tahun
+		end else
+		begin
+			dateBatas[4] := dateNow[4];
+			dateBatas[5] := char( integer(dateNow[5]) + 1 );
+			// Tahun sama
+			dateBatas[7] := dateNow[7];
+			dateBatas[8] := dateNow[8];
+			dateBatas[9] := dateNow[9];
+			dateBatas[10] := dateNow[10];
+		end;
+
+		// End of Ganti Bulan
+
+
+    end else if ( integer(dateNow[2]) >= 51 ) and (dateNow[1] <> '2') then
+    begin
+        dateBatas[1] := char( integer(dateNow[1]) + 1  );
+        dateBatas[2] := char( integer(dateNow[2]) - 3);
+
+
+        dateBatas[4] := dateNow[4];
+        dateBatas[5] := dateNow[5];
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := dateNow[10];
+    end else if ( integer(dateNow[2]) >= 51 ) and (dateNow[1] = '2') then
+	begin
+		dateBatas[1] := '0';
+		dateBatas[2] := char( integer(dateNow[2]) - 3);
+		
+		// Ganti Bulan
+		if (dateNow[5] = '9') then
+		begin
+			dateBatas[5] := '0';
+			dateBatas[4] := '1';
+			// Tahun sama
+			dateBatas[7] := dateNow[7];
+			dateBatas[8] := dateNow[8];
+			dateBatas[9] := dateNow[9];
+			dateBatas[10] := dateNow[10];
+		end else if (dateNow[4] = '1') and (dateNow[5] = '2') then
+		begin
+			dateBatas[4] := '0';
+			dateBatas[5] := '1';
+			// Ganti Tahun
+			if (dateNow[10] = '9') then
+			begin
+				dateBatas[7] := dateNow[7];
+				dateBatas[8] := dateNow[8];
+
+				dateBatas[10] := '0';
+				dateBatas[9] := char ( integer(dateNow[9]) + 1  );
+			end else
+			begin
+				dateBatas[7] := dateNow[7];
+				dateBatas[8] := dateNow[8];
+
+				dateBatas[9] := dateNow[9];
+				dateBatas[10] := char( integer(dateNow[10]) + 1  );
+
+			end;
+
+			// End of Ganti Tahun
+		end else
+		begin
+			dateBatas[4] := dateNow[4];
+			dateBatas[5] := char( integer(dateNow[5]) + 1 );
+			// Tahun sama
+			dateBatas[7] := dateNow[7];
+			dateBatas[8] := dateNow[8];
+			dateBatas[9] := dateNow[9];
+			dateBatas[10] := dateNow[10];
+		end;
+
+		// End of Ganti Bulan
+
+	end else
+	begin
+		dateBatas[1] := dateNow[1];
+        dateBatas[2] := char( integer(dateNow[2]) + 7);
+
+
+        dateBatas[4] := dateNow[4];
+        dateBatas[5] := dateNow[5];
+        dateBatas[7] := dateNow[7];
+        dateBatas[8] := dateNow[8];
+        dateBatas[9] := dateNow[9];
+        dateBatas[10] := dateNow[10];
+
 	end;
-	else if (InIDBuku <> TabDataBk[i].Nama_Buku) then
-	begin
-		Writeln('Buku yang anda cari tidak ditemukan');
-	end
-	close (PinjamBuku);
-end.
+
+        arrDataPeminjaman[LoadNeffData.Peminjaman].batasKembali.day := dateBatas[1] + dateBatas[2];
+        arrDataPeminjaman[LoadNeffData.Peminjaman].batasKembali.month := dateBatas[4] + dateBatas[5];
+        arrDataPeminjaman[LoadNeffData.Peminjaman].batasKembali.year := dateBatas[7] + dateBatas[8] + dateBatas[9] + dateBatas[10];
+
+    end; // End of statusPeminjaman. Else, tidak melakukan perubahan pada array arrDataPeminjaman
+
+
+end; // End of Procedure PinjamBuku
+
 	
+procedure updatePeminjaman;
+
+var
+	FilePeminjaman : text;
+	counter : integer;
+	updatePeminjaman : string;
+	updateBuku : string;
+
+begin
+	assign(FilePeminjaman,'peminjaman.csv');
+	rewrite(FilePeminjaman);
+	updatePeminjaman := 'Username' + ',' + 'ID_Buku' + ',' + 'Tanggal_Peminjaman' + ',' +
+	'Tanggal_Batas_Peminjaman' + ',' + 'Status_Pengembalian' + ',';
+	writeln(FilePeminjaman,updatePeminjaman);
+	counter := 1;
+	while (arrDataPeminjaman[counter].idBuku <> '') do
+	begin
+		updatePeminjaman := arrDataPeminjaman[counter].username + ',' + arrDataPeminjaman[counter].idBuku + ',' +
+		arrDataPeminjaman[counter].datePinjam.day + '/' +
+		arrDataPeminjaman[counter].datePinjam.month + '/' + arrDataPeminjaman[counter].datePinjam.year + ',' +
+		arrDataPeminjaman[counter].batasKembali.day + '/' + arrDataPeminjaman[counter].batasKembali.month + '/' +
+		arrDataPeminjaman[counter].batasKembali.year + ',' + arrDataPeminjaman[counter].status + ',';
+		writeln(FilePeminjaman,updatePeminjaman);
+		counter := counter + 1;
+	end;
+	close(FilePeminjaman);
+
+
+	// Re-Write File Buku.csv
+	assign(FileBuku,'buku.csv');
+	rewrite(FileBuku);
+	updateBuku := 'ID_Buku,Judul_Buku,Author,Jumlah_Buku,Tahun_Penerbit,Kategori,';
+	writeln(FileBuku,updateBuku);
+	counter := 1;
+	while (arrDataBuku[counter].judul <> '') do
+	begin
+		updateBuku := arrDataBuku[counter].idBuku + ',' + arrDataBuku[counter].judul + ',' + arrDataBuku[counter].author + ',' +
+		arrDataBuku[counter].jumlah + ',' + arrDataBuku[counter].tahunterbit + ',' + arrDataBuku[counter].kategori + ',';
+		writeln(FileBuku,updateBuku);
+		counter := counter + 1;
+	end;
+	close(FileBuku);
 	
 
+end; // End of Procedure Pengembalian
+
+end.
