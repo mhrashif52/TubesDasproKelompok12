@@ -12,90 +12,9 @@ uses Record_Perpus,F13;
 
 procedure PinjamBuku(username : string);
 
-procedure gantiHari7(dateNow, dateBatas : string);
-procedure gantiBulan(dateNow, dateBatas : string);
-procedure gantiTahun(dateNow, dateBatas : string);
-
 procedure updatePeminjaman;
 
 implementation
-
-
-procedure gantiTahun(dateNow, dateBatas : string);
-begin
-    if (dateNow[10] = '9') then
-    begin
-        dateBatas[7] := dateNow[7];
-        dateBatas[8] := dateNow[8];
-
-        dateBatas[10] := '0';
-        dateBatas[9] := char ( integer(dateNow[9]) + 1  );
-    end else
-    begin
-        dateBatas[7] := dateNow[7];
-        dateBatas[8] := dateNow[8];
-
-        dateBatas[9] := dateNow[9];
-        dateBatas[10] := char( integer(dateNow[10]) + 1  );
-
-    end;
-
-end;
-
-procedure gantiBulan(dateNow, dateBatas : string);
-begin
-    if (dateNow[5] = '9') then
-    begin
-        dateBatas[5] := '0';
-        dateBatas[4] := '1';
-        // Tahun sama
-        dateBatas[7] := dateNow[7];
-        dateBatas[8] := dateNow[8];
-        dateBatas[9] := dateNow[9];
-        dateBatas[10] := dateNow[10];
-    end else if (dateNow[4] = '1') and (dateNow[5] = '2') then
-    begin
-        dateBatas[4] := '0';
-        dateBatas[5] := '1';
-        gantiTahun(dateNow, dateBatas);
-    end else
-    begin
-        dateBatas[4] := dateNow[4];
-        dateBatas[5] := char( integer(dateNow[5]) + 1 );
-        // Tahun sama
-        dateBatas[7] := dateNow[7];
-        dateBatas[8] := dateNow[8];
-        dateBatas[9] := dateNow[9];
-        dateBatas[10] := dateNow[10];
-    end;
-
-end;
-
-procedure gantiHari7(dateNow, dateBatas : string);
-begin
-    if (dateNow[1] = '3') then
-    begin
-        dateBatas[1] := '0';
-        dateBatas[2] := '7';
-        gantiBulan(dateNow, dateBatas);
-    end else if ( integer(dateNow[2]) >= 51 ) then
-    begin
-        dateBatas[1] := char( integer(dateNow[1]) + 1  );
-        dateBatas[2] := char( integer(dateNow[1]) - 3);
-
-
-        dateBatas[4] := dateNow[4];
-        dateBatas[5] := dateNow[5];
-        dateBatas[7] := dateNow[7];
-        dateBatas[8] := dateNow[8];
-        dateBatas[9] := dateNow[9];
-        dateBatas[10] := dateNow[10];
-    end;
-
-end;
-
-
-
 
 procedure PinjamBuku(username : string);
 var
