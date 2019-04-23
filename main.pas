@@ -1,6 +1,6 @@
 Program Tubes;
 
-uses Record_Perpus,F01,F02,F03,F11,F06,F08,F13,F14,F07,F12;
+uses Record_Perpus,F01,F02,F03,F05,F06,F07,F08,F10,F11,F12,F13,F14,F15;
 
 var
 
@@ -65,6 +65,8 @@ begin
 
 		3 : begin
 				//procedure 05
+				
+				
 			end;
 
 		4 : begin
@@ -91,7 +93,7 @@ begin
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
 				begin
-					Update;
+					UpdatePengembalian;
 				end;
 				quitProgram := True;
 			end;
@@ -124,8 +126,7 @@ begin
 
 		1 : begin 
 				//procedure 03
-				readln(kat);
-				CariKat(kat);
+
 			end;
 		
 		2 : begin
@@ -196,7 +197,7 @@ begin
 				readln(SaveOrNot);
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
 				begin
-					Update;
+					UpdatePengembalian;
 					updateRegisterAkun(InputAkun);
 				end;
 				quitProgram := True;
