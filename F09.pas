@@ -7,13 +7,13 @@ uses Record_Perpus;
 var
 	Bukufile : text;
 	textline : string;
-	arrNewBook : array[1..NMax] of DataBuku;
+	arrDataBuku : array[1..NMax] of DataBuku;
 	InputBukuBaru : DataBuku;
 	
 	
 procedure registerBukuBaru;
 
-procedure updateregisterBukuBaru(arrNewBook : array of DataBuku);
+procedure updateregisterBukuBaru(arrDataBuku : array of DataBuku);
 
 
 implementation
@@ -36,24 +36,24 @@ begin
 	readln(InputBukuBaru.kategori);
 	
 	NeffBukuBaru := NeffBukuBaru + 1;
-	arrNewBook[NeffBukuBaru].idBuku := InputBukuBaru.idBuku;
-	arrNewBook[NeffBukuBaru].judul := InputBukuBaru.judul;
-	arrNewBook[NeffBukuBaru].author := InputBukuBaru.author;
-	arrNewBook[NeffBukuBaru].jumlah := InputBukuBaru.jumlah;
-	arrNewBook[NeffBukuBaru].tahunterbit := InputBukuBaru.tahunterbit;
-	arrNewBook[NeffBukuBaru].kategori := InputBukuBaru.kategori;
+	arrDataBuku[NeffBukuBaru].idBuku := InputBukuBaru.idBuku;
+	arrDataBuku[NeffBukuBaru].judul := InputBukuBaru.judul;
+	arrDataBuku[NeffBukuBaru].author := InputBukuBaru.author;
+	arrDataBuku[NeffBukuBaru].jumlah := InputBukuBaru.jumlah;
+	arrDataBuku[NeffBukuBaru].tahunterbit := InputBukuBaru.tahunterbit;
+	arrDataBuku[NeffBukuBaru].kategori := InputBukuBaru.kategori;
 end;
 
-procedure updateregisterBukuBaru(arrNewBook : array of DataBuku);
+procedure updateregisterBukuBaru(arrDataBuku : array of DataBuku);
 var
-	j : integer;
+	i : integer;
 begin
 	system.Assign(Bukufile, 'buku.csv');
 	system.Append(Bukufile);
-	for j := 1 to NeffBukuBaru do
+	for i := 1 to NeffBukuBaru do
 	begin
-		textLine := arrNewBook[j].idBuku + ',' + arrNewBook[j].judul + ',' + arrNewBook[j].author + ','+ arrNewBook[j].jumlah +
-		',' + arrNewBook[j].tahunterbit + ',' + arrNewBook[j].kategori + ',' ;
+		textLine := arrDataBuku[i].idBuku + ',' + arrDataBuku[i].judul + ',' + arrDataBuku[i].author + ','+ arrDataBuku[i].jumlah +
+		',' + arrDataBuku[i].tahunterbit + ',' + arrDataBuku[i].kategori + ',' ;
 		writeln(Bukufile,textline);
 end;
 writeln('Buku berhasil ditambakan');
@@ -61,4 +61,3 @@ Close(Bukufile);
 end;
 
 end.
-	
