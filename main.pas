@@ -64,7 +64,7 @@ begin
 			end;
 
 		3 : begin
-				//procedure 05
+				PinjamBuku(usernameLogin);
 				
 				
 			end;
@@ -94,6 +94,7 @@ begin
 				if (SaveOrNot = 'Y') or (SaveOrNot = 'y') then
 				begin
 					UpdatePengembalian;
+					UpdatePeminjaman;
 				end;
 				quitProgram := True;
 			end;
