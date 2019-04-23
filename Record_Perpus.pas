@@ -68,10 +68,12 @@ var
 	idBuku : string;
 	InputAkun : Akun;
 	NeffAkunBaru : integer;
+	NeffBukuBaru : integer;
 
 implementation
 begin
 	NeffAkunBaru := 0;
+	NeffBukuBaru := 0;
 
 end.
 				
