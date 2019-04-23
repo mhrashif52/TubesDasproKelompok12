@@ -1,6 +1,6 @@
 Program Tubes;
 
-uses Record_Perpus,F01,F02,F03,F05,F06,F07,F08,F10,F11,F12,F13,F14,F15;
+uses Record_Perpus,F01,F02,F03,F05,F06,F07,F08,F10,F11,F12,F13,F14,F15,F16;
 
 var
 
@@ -166,6 +166,9 @@ begin
 
 		9 : begin
 				//procedure 13
+				Write('Masukkan Username: ');
+				readln(InUsername);
+				CariDataDiri(InUsername);
 			end;
 
 		10 : begin
