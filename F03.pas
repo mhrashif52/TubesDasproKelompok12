@@ -21,15 +21,6 @@ secara leksikografis (pengurutan seperti kamus). *)
 
 interface
 uses F13, record_perpus;
-	{type
-		Data = record
-			ID : integer;
-			Ju : string;
-			Au : string;
-			Jm : integer;
-			Tp : string;
-			Kat : string;
-	end;}
 	var 
 		buku, arrnew : array [1..NMax] of DataBuku;
 		i, j : integer;
